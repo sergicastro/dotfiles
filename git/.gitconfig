@@ -1,0 +1,30 @@
+[user]
+    name = Sergi Castro
+    email = sergikstro@gmail.com
+
+[core]
+    editor = vim
+    pager = more
+
+[color]
+    status = auto
+    interactive = auto
+    diff = auto
+    branch = auto
+    ui = auto
+
+[alias]
+    st = status
+    ci = commit
+    co = checkout
+    pl = pull
+    ps = push
+    pr = pull --rebase
+    br = branch
+    lg = log --graph
+
+[apply]
+    whitespace = nowarn
+
+[format]
+    pretty=format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
