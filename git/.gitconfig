@@ -5,6 +5,7 @@
 [core]
     editor = vim
     pager = more
+    excludesfile = ~/.gitignore
 
 [color]
     status = auto
@@ -22,6 +23,7 @@
     pr = pull --rebase
     br = branch
     lg = log --graph
+    ll = log --graph --oneline
 
 [apply]
     whitespace = nowarn

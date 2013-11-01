@@ -1,0 +1,33 @@
+# Aliases
+alias p='ps aux | grep -i'
+alias k='kill -9'
+alias sk='sudo kill -9'
+alias n='LANG=C sudo netstat -putan | grep -i'
+
+alias poff='sudo shutdown 1 "Powering off $HOSTNAME"'
+
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+
+alias mvnc='mvn clean'
+alias mvnp='mvn package'
+alias mvni='mvn install'
+alias mvnt='mvn test'
+alias mvncp='mvn clean package'
+alias mvnci='mvn clean install'
+alias mvncinone='mvn clean install -Dtest.suite=none -Dit.suite=none -fae'
+alias mvnct='mvn clean test'
+alias mvntd='mvn cargo:deploy'
+alias mvntu='mvn cargo:undeploy'
+alias mvntr='mvn cargo:redeploy'
+alias mvndt='mvn dependency:tree'
+alias mvndci='mvnDebug clean install'
+
+alias mysqlk='mysql -u root -proot'
+
+alias tomCatalina='sudo /opt/tomcat/bin/catalina.sh'
+alias cleantomcat='sh ~/utility-scripts/cleantomcat.sh'
+
+alias scpi='scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+alias sshi='ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
