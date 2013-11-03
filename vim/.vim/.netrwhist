@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/home/sergi/workspace/kahuna/kahuna/plugins'
+let g:netrw_dirhist_2='/home/sergi/.kahuna'
+let g:netrw_dirhist_3='/home/sergi/workspace/kahuna/.git'
+let g:netrw_dirhist_4='/home/sergi/workspace/kahuna/kahuna'
+let g:netrw_dirhist_5='/home/sergi/workspace/pysql/config'
+let g:netrw_dirhist_6='/home/sergi/workspace/kahuna'
+let g:netrw_dirhist_7='/home/sergi/workspace/pysql/config'
+let g:netrw_dirhist_8='/home/sergi/workspace/geddit'
+let g:netrw_dirhist_9='/home/sergi/workspace/powerline'

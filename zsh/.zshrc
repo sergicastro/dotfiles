@@ -40,12 +40,15 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git heroku mvn pip python redis-cli)
+plugins=(git colored-man colorize heroku mvn pip python redis-cli)
 
 source $ZSH/oh-my-zsh.sh
 
-# Customize to your needs...
-source ~/.zsh/aliases
+#### Customize to your needs...
+setopt no_share_history
+
+# source ~/.zsh/aliases
+source ~/.dotfiles/zsh/aliases
 
 # autocomplete ..
 zstyle ':completion:*' special-dirs true

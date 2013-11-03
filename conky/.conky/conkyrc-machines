@@ -1,0 +1,62 @@
+background yes
+
+use_xft yes # Use Xft?
+# xftfont Bitstream Vera Sans Mono:size=8
+xftfont Ubuntu Mono:size=10
+xftalpha 0.4 # Text alpha when using Xft
+text_buffer_size 2048
+update_interval 90.0 # Update interval in seconds
+
+total_run_times 0 
+
+own_window yes
+own_window_type desktop
+own_window_transparent yes
+# own_window_type override
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+double_buffer yes # Use double buffering (reduces flicker, may not work for everyone)
+
+maximum_width 300
+minimum_size 2000 
+
+draw_shades yes 
+draw_outline no 
+draw_borders no 
+stippled_borders 8
+
+border_margin 4
+border_width 1
+
+default_color white
+default_shade_color black
+default_outline_color white
+
+alignment top_left 
+
+gap_x 30 
+gap_y 400 
+
+no_buffers yes
+uppercase no
+
+cpu_avg_samples 4 
+net_avg_samples 2
+
+override_utf8_locale yes 
+
+use_spacer no # Add spaces to keep things from moving about?  This only affects certain objects.
+
+default_color 888888
+color0 FFFFFF
+color1 666666 
+
+TEXT
+
+MACHINE STATUS ${color1}${hr 2}
+${color0}${execp python /home/sergi/.conky/.scripts/ping.py --conky -l raspbmc}
+${color0}${execp python /home/sergi/.conky/.scripts/ping.py --conky -l optimus}
+${color0}${execp python /home/sergi/.conky/.scripts/ping.py --conky -l 10.60.1.245 -n scastro}
+${color0}${execp python /home/sergi/.conky/.scripts/ping.py --conky -l 10.60.12.18 -n 'rs centos'}
+${color0}${execp python /home/sergi/.conky/.scripts/ping.py --conky -l 10.60.1.37 -n kvm}
+${color1}${hr 2}
