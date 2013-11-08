@@ -1,3 +1,7 @@
+# Disabled from autocorrect
+alias git='nocorrect git'
+alias vim='nocorrect vim'
+
 # Aliases
 alias p='ps aux | grep -i'
 alias k='kill -9'
