@@ -1,0 +1,18 @@
+[submodule "vim/.vim/bundle/jedi-vim"]
+	path = vim/.vim/bundle/jedi-vim
+	url = git@github.com:davidhalter/jedi-vim.git
+[submodule "vim/.vim/bundle/vim-classpath"]
+	path = vim/.vim/bundle/vim-classpath
+	url = git@github.com:tpope/vim-classpath.git
+[submodule "vim/.vim/bundle/vim-clojure-static"]
+	path = vim/.vim/bundle/vim-clojure-static
+	url = git@github.com:guns/vim-clojure-static.git
+[submodule "vim/.vim/bundle/vim-fireplace"]
+	path = vim/.vim/bundle/vim-fireplace
+	url = git@github.com:tpope/vim-fireplace.git
+[submodule "vim/.vim/bundle/vim-nerdtree-tabs"]
+	path = vim/.vim/bundle/vim-nerdtree-tabs
+	url = git@github.com:jistr/vim-nerdtree-tabs.git
+[submodule "vim/.vim/bundle/vim-python-pep8-indent"]
+	path = vim/.vim/bundle/vim-python-pep8-indent
+	url = git@github.com:hynek/vim-python-pep8-indent.git
