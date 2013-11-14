@@ -136,14 +136,30 @@ autocmd VimEnter *.h NERDTree
 autocmd VimEnter *.cpp NERDTree
 autocmd VimEnter *. wincmd p
 autocmd VimEnter * wincmd l
+autocmd vimenter * if !argc() | NERDTree | endif
 
 " NERDTree tabs
 let g:nerdtree_tabs_open_on_console_startup=1
 let g:nerdtree_tabs_smart_startup_focus=2
 
+" GRB: use fancy buffer closing that doesn't close the split
+cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
+:nnoremap <silent> <S-Left> :bprevious<CR>
+:nnoremap <silent> <S-Right> :bnext<CR>
+:noremap <silent> <C-Left> b
+:noremap <silent> <C-Right> w
+
+" airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+
 " powerline
-set rtp+=/home/sergi/workspace/powerline/powerline/bindings/vim
-set laststatus=2 " Always display the statusline in all windows
+" set rtp+=/home/sergi/workspace/powerline/powerline/bindings/vim
+" set laststatus=2 " Always display the statusline in all windows
+
+" majutsushi tagbar
+nmap <F8> :TagbarToggle<CR>
 
 " ---------------- "
 "      PYTHON      "
