@@ -95,6 +95,9 @@ set number
 set title 
 set ruler
 
+" :w!! sudo saves the file
+cmap w!! w !sudo tee % >/dev/null
+
 " ---------------- "
 "     PLUGINS      "
 " ---------------- "
@@ -108,10 +111,10 @@ let g:ctags_statusline=1
 
 " Taglist
 " let Tlist_Ctags_Cmd = "~/.vim/plugin/taglist.vim"
-noremap <silent><F3> :TlistToggle<CR>
-let Tlist_Auto_Update = 1
-let Tlist_Use_Right_Window = 1
-let Tlist_File_Fold_Auto_Close = 1
+" noremap <silent><F3> :TlistToggle<CR>
+" let Tlist_Auto_Update = 1
+" let Tlist_Use_Right_Window = 1
+" let Tlist_File_Fold_Auto_Close = 1
 " autocmd VimEnter *.java Tlist
 " autocmd VimEnter *.xml Tlist
 " autocmd VimEnter *.php Tlist
@@ -127,20 +130,23 @@ let NERDTreeCaseSensitiveSort = 1
 let NERDTreeHighlightCursorline = 1
 let NERDTreeMouseMode = 2
 let NERDTreeShowBookmarks = 1
-autocmd VimEnter *.java NERDTree
-autocmd VimEnter *.xml NERDTree
-autocmd VimEnter *.php NERDTree
-autocmd VimEnter *.py NERDTree
-autocmd VimEnter *.c NERDTree
-autocmd VimEnter *.h NERDTree
-autocmd VimEnter *.cpp NERDTree
-autocmd VimEnter *. wincmd p
-autocmd VimEnter * wincmd l
+let NERDTreeShowHidden = 1
+let NERDTreeIgnore=['.*\.o$']
+let NERDTreeIgnore+=['.*\~$']
+let NERDTreeIgnore+=['.*\.out$']
+let NERDTreeIgnore+=['.*\.so$', '.*\.a$']
+let NERDTreeIgnore+=['.*\.pyc$']
+let NERDTreeIgnore+=['.*\.class$']
+let NERDTreeIgnore+=['.*\.git\/COMMIT_EDITMSG$']
 autocmd vimenter * if !argc() | NERDTree | endif
 
 " NERDTree tabs
 let g:nerdtree_tabs_open_on_console_startup=1
 let g:nerdtree_tabs_smart_startup_focus=2
+
+" buff explorer
+nmap <F4> :BufExplorerHorizontalSplit<CR>
+let g:bufExplorerSplitBelow=1
 
 " GRB: use fancy buffer closing that doesn't close the split
 cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
@@ -152,14 +158,22 @@ cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
 " airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#left_alt_sep = '||'
+let g:airline_exclude_preview = 1
+let g:airline_left_sep = '▶'
+let g:airline_left_alt_sep = '▶'
+let g:airline_right_sep = '◀'
+let g:airline_right_alt_sep = '◀'
+let g:airline_linecolumn_prefix = '␤ '
+let g:airline_branch_prefix = '⎇ '
+let g:airline_paste_symbol = 'ρ'
 
 " powerline
 " set rtp+=/home/sergi/workspace/powerline/powerline/bindings/vim
 " set laststatus=2 " Always display the statusline in all windows
 
 " majutsushi tagbar
-nmap <F8> :TagbarToggle<CR>
+nmap <F3> :TagbarToggle<CR>
 
 " ---------------- "
 "      PYTHON      "

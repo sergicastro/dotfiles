@@ -25,3 +25,18 @@
 [submodule "vim/.vim/bundle/nerdtree"]
 	path = vim/.vim/bundle/nerdtree
 	url = git@github.com:scrooloose/nerdtree.git
+[submodule "vim/.vim/bundle/vim-autoclose"]
+	path = vim/.vim/bundle/vim-autoclose
+	url = git@github.com:Townk/vim-autoclose.git
+[submodule "vim/.vim/bundle/xmledit"]
+	path = vim/.vim/bundle/xmledit
+	url = git@github.com:sukima/xmledit.git
+[submodule "vim/.vim/bundle/vim-fugitive"]
+	path = vim/.vim/bundle/vim-fugitive
+	url = git@github.com:tpope/vim-fugitive.git
+[submodule "vim/.vim/bundle/vim-signify"]
+	path = vim/.vim/bundle/vim-signify
+	url = git@github.com:mhinz/vim-signify.git
+[submodule "vim/.vim/bundle/bufexplorer"]
+	path = vim/.vim/bundle/bufexplorer
+	url = git@github.com:jlanzarotta/bufexplorer.git
