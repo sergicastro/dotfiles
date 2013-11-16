@@ -80,7 +80,7 @@ autocmd BufWritePost .vimrc source $MYVIMRC
 " tcsoft.vim, tir_black.vim, tolerable.vim, torte.vim, twilight.vim, two2tango.vim, vc.vim, vibrantink.vim, vividchalk.vim, vylight.vim,
 " winter.vim, wombat256mod.vim, wombat256.vim, wombat.vim, wood.vim, wuye.vim, xemacs.vim, xoria256.vim, zenburn.vim, zmrok.vim]
 
-" colorscheme kellys 
+" colorscheme Tomorrow-Night 
 
 sy on
 set t_Co=256
@@ -108,6 +108,36 @@ execute pathogen#infect()
 " ctags
 let g:ctags_path = "~/.vim/plugin/ctags.vim"
 let g:ctags_statusline=1
+
+" Rainbow parantheses
+au VimEnter * RainbowParenthesesToggle     " Toggle it on/off
+au Syntax * RainbowParenthesesLoadRound    " (), the default when toggling
+au Syntax * RainbowParenthesesLoadSquare   " []
+au Syntax * RainbowParenthesesLoadBraces   " {}
+au Syntax * RainbowParenthesesLoadChevrons " <>
+
+set viminfo+=!
+let g:rbpt_colorpairs = [
+            \ ['brown',       'RoyalBlue3'],
+            \ ['Darkblue',    'SeaGreen3'],
+            \ ['darkgray',    'DarkOrchid3'],
+            \ ['darkgreen',   'firebrick3'],
+            \ ['darkcyan',    'RoyalBlue3'],
+            \ ['darkred',     'SeaGreen3'],
+            \ ['darkmagenta', 'DarkOrchid3'],
+            \ ['brown',       'firebrick3'],
+            \ ['gray',        'RoyalBlue3'],
+            \ ['black',       'SeaGreen3'],
+            \ ['darkmagenta', 'DarkOrchid3'],
+            \ ['Darkblue',    'firebrick3'],
+            \ ['darkgreen',   'RoyalBlue3'],
+            \ ['darkcyan',    'SeaGreen3'],
+            \ ['darkred',     'DarkOrchid3'],
+            \ ['red',         'firebrick3'],
+            \ ]
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
+
 
 " Taglist
 " let Tlist_Ctags_Cmd = "~/.vim/plugin/taglist.vim"
@@ -137,19 +167,20 @@ let NERDTreeIgnore+=['.*\.out$']
 let NERDTreeIgnore+=['.*\.so$', '.*\.a$']
 let NERDTreeIgnore+=['.*\.pyc$']
 let NERDTreeIgnore+=['.*\.class$']
-let NERDTreeIgnore+=['.*\.git\/COMMIT_EDITMSG$']
 autocmd vimenter * if !argc() | NERDTree | endif
 
 " NERDTree tabs
-let g:nerdtree_tabs_open_on_console_startup=1
-let g:nerdtree_tabs_smart_startup_focus=2
+" let g:nerdtree_tabs_open_on_console_startup=1
+" let g:nerdtree_tabs_smart_startup_focus=2
 
 " buff explorer
 nmap <F4> :BufExplorerHorizontalSplit<CR>
 let g:bufExplorerSplitBelow=1
 
 " GRB: use fancy buffer closing that doesn't close the split
-cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
+" cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
+nnoremap <silent> <C-d> :lclose<CR>:bdelete<CR>
+cabbrev <silent> bd lclose\|bdelete
 :nnoremap <silent> <S-Left> :bprevious<CR>
 :nnoremap <silent> <S-Right> :bnext<CR>
 :noremap <silent> <C-Left> b
@@ -158,7 +189,8 @@ cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
 " airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '||'
+let g:airline#extensions#tabline#left_alt_sep = '᎒'
+let g:airline#extensions#tabline#left_alt_sep = 'ꔖ'
 let g:airline_exclude_preview = 1
 let g:airline_left_sep = '▶'
 let g:airline_left_alt_sep = '▶'
@@ -168,12 +200,11 @@ let g:airline_linecolumn_prefix = '␤ '
 let g:airline_branch_prefix = '⎇ '
 let g:airline_paste_symbol = 'ρ'
 
-" powerline
-" set rtp+=/home/sergi/workspace/powerline/powerline/bindings/vim
-" set laststatus=2 " Always display the statusline in all windows
-
 " majutsushi tagbar
 nmap <F3> :TagbarToggle<CR>
+
+" gundo tree
+nnoremap <F5> :GundoToggle<CR>
 
 " ---------------- "
 "      PYTHON      "
@@ -184,15 +215,14 @@ let g:jedi#use_splits_not_buffers = "left"
 " Flake 8 code style
 autocmd BufWritePost *.py call Flake8()
 
+" Syntastic use python checker
+let g:syntastic_python_checkers=['flake8']
+
 " ---------------- "
 "     REMAPINGS    "
 " ---------------- "
 
 " Move around the windows
-noremap <silent> ,j :wincmd j<CR>
-noremap <silent> ,h :wincmd h<CR>
-noremap <silent> ,k :wincmd k<CR>
-noremap <silent> ,l :wincmd l<CR>
 noremap <silent> -<down> :wincmd j<CR>
 noremap <silent> -<left> :wincmd h<CR>
 noremap <silent> -<up> :wincmd k<CR>
