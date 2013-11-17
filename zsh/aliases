@@ -36,3 +36,8 @@ alias cleantomcat='sh ~/utility-scripts/cleantomcat.sh'
 
 alias scpi='scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 alias sshi='ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+# Functions
+function v() {
+    tmux new -d -s vim "vim $*" \; attach
+}

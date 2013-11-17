@@ -228,5 +228,5 @@ noremap <silent> -<left> :wincmd h<CR>
 noremap <silent> -<up> :wincmd k<CR>
 noremap <silent> -<right> :wincmd l<CR>
 
-"Maped keys
-noremap <silent> qq :qa<CR>
+" tmux
+nmap <silent> <F6> :!tmux splitw -v -l 5<CR><CR>

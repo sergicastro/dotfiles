@@ -47,7 +47,7 @@ function my_current_branch() {
 
 function ssh_connection() {
   if [[ -n $SSH_CONNECTION ]]; then
-    echo "%{$fg_bold[red]%}(ssh) "
+    echo "%{$fg[red]%}%B(ssh)%b"
   fi
 }
 
