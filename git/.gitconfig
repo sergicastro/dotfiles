@@ -17,6 +17,7 @@
 
 [alias]
     st = status
+    ss = status --short
     ci = commit
     co = checkout
     pl = pull
@@ -34,3 +35,7 @@
 
 [push]
     default = matching
+
+[diff]
+    renames = true
+    renameLimit = 200

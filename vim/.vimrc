@@ -114,7 +114,7 @@ au VimEnter * RainbowParenthesesToggle     " Toggle it on/off
 au Syntax * RainbowParenthesesLoadRound    " (), the default when toggling
 au Syntax * RainbowParenthesesLoadSquare   " []
 au Syntax * RainbowParenthesesLoadBraces   " {}
-au Syntax * RainbowParenthesesLoadChevrons " <>
+" au Syntax * RainbowParenthesesLoadChevrons " <>
 
 set viminfo+=!
 let g:rbpt_colorpairs = [
@@ -130,10 +130,10 @@ let g:rbpt_colorpairs = [
             \ ['black',       'SeaGreen3'],
             \ ['darkmagenta', 'DarkOrchid3'],
             \ ['Darkblue',    'firebrick3'],
+            \ ['red',         'firebrick3'],
             \ ['darkgreen',   'RoyalBlue3'],
             \ ['darkcyan',    'SeaGreen3'],
             \ ['darkred',     'DarkOrchid3'],
-            \ ['red',         'firebrick3'],
             \ ]
 let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
@@ -229,7 +229,7 @@ noremap <silent> -<up> :wincmd k<CR>
 noremap <silent> -<right> :wincmd l<CR>
 
 " tmux
-nmap <silent> <F6> :!tmux splitw -v -l 5<CR><CR>
+nmap <silent> <F6> :!tmux splitw -v -l 10<CR><CR>
 
 " Tmux integration
 if &term =~ '^screen'
