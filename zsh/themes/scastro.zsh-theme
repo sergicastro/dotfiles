@@ -30,12 +30,16 @@ function my_git_prompt() {
   if $(echo "$INDEX" | grep -E -e '^(A[AU]|D[DU]|U[ADU]) ' &> /dev/null); then
     STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_UNMERGED"
   fi
+ 
+  # is anything renamed?
+  if $(echo "$INDEX" | grep '^R' &> /dev/null); then
+    STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_RENAMED"
+  fi
 
   # choose color dependen on clean branch
   if [[ -n $STATUS ]];
     then ZSH_GIT_CUST_BRANCH="%{$fg_bold[yellow]%}$(my_current_branch) ";
     else ZSH_GIT_CUST_BRANCH="%{$fg_bold[cyan]%}$(my_current_branch) %{$fg_bold[green]%}✔";
-
   fi
 
   echo "$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
@@ -59,7 +63,7 @@ ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg_bold[magenta]%}↑"
 ZSH_THEME_GIT_PROMPT_STAGED="%{$fg_bold[green]%}⚡"
 ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$fg_bold[red]%}⚡"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg_bold[white]%}⚡"
-ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[blue]%} ➜" # implement
+ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[blue]%}➜"
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg_bold[red]%}✕"
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[gray]%}<%{$fg_bold[yellow]%} "
 ZSH_THEME_GIT_PROMPT_SUFFIX=" %b%{$fg_bold[gray]%}>%{$reset_color%}"
