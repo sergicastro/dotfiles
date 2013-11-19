@@ -106,15 +106,15 @@ cmap w!! w !sudo tee % >/dev/null
 execute pathogen#infect()
 
 " ctags
-let g:ctags_path = "~/.vim/plugin/ctags.vim"
-let g:ctags_statusline=1
+" let g:ctags_path = "~/.vim/plugin/ctags.vim"
+" let g:ctags_statusline=1
 
 " Rainbow parantheses
 au VimEnter * RainbowParenthesesToggle     " Toggle it on/off
 au Syntax * RainbowParenthesesLoadRound    " (), the default when toggling
 au Syntax * RainbowParenthesesLoadSquare   " []
 au Syntax * RainbowParenthesesLoadBraces   " {}
-au Syntax * RainbowParenthesesLoadChevrons " <>
+" au Syntax * RainbowParenthesesLoadChevrons " <>
 
 set viminfo+=!
 let g:rbpt_colorpairs = [
@@ -128,12 +128,12 @@ let g:rbpt_colorpairs = [
             \ ['brown',       'firebrick3'],
             \ ['gray',        'RoyalBlue3'],
             \ ['black',       'SeaGreen3'],
-            \ ['darkmagenta', 'DarkOrchid3'],
             \ ['Darkblue',    'firebrick3'],
+            \ ['red',         'firebrick3'],
+            \ ['darkmagenta', 'DarkOrchid3'],
             \ ['darkgreen',   'RoyalBlue3'],
             \ ['darkcyan',    'SeaGreen3'],
             \ ['darkred',     'DarkOrchid3'],
-            \ ['red',         'firebrick3'],
             \ ]
 let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
@@ -204,7 +204,7 @@ let g:airline_paste_symbol = 'ρ'
 nmap <F3> :TagbarToggle<CR>
 
 " gundo tree
-nnoremap <F5> :GundoToggle<CR>
+nnoremap <F6> :GundoToggle<CR>
 
 " ---------------- "
 "      PYTHON      "
@@ -229,7 +229,7 @@ noremap <silent> -<up> :wincmd k<CR>
 noremap <silent> -<right> :wincmd l<CR>
 
 " tmux
-nmap <silent> <F6> :!tmux splitw -v -l 5<CR><CR>
+nmap <silent> <F5> :!tmux splitw -v -l 10<CR><CR>
 
 " Tmux integration
 if &term =~ '^screen'
@@ -239,3 +239,6 @@ if &term =~ '^screen'
     execute "set <xRight>=\e[1;*C"
     execute "set <xLeft>=\e[1;*D"
 endif"
+
+" Close tmux when exiting vim
+autocmd VimLeave * silent !tmux killp -a
