@@ -95,19 +95,35 @@ set number
 set title 
 set ruler
 
+" ----------------------- "
+"   NO PLUGIN REMAPINGS   "
+" ----------------------- "
+
 " :w!! sudo saves the file
 cmap w!! w !sudo tee % >/dev/null
+
+" GRB: use fancy buffer closing that doesn't close the split
+" cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
+nnoremap <silent> <C-d> :lclose<CR>:bdelete<CR>
+cabbrev <silent> bd lclose\|bdelete
+:nnoremap <silent> <S-Left> :bprevious<CR>
+:nnoremap <silent> <S-Right> :bnext<CR>
+:noremap <silent> <C-Left> b
+:noremap <silent> <C-Right> w
+
+" Move around the splits
+noremap <silent> -<down> :wincmd j<CR>
+noremap <silent> -<left> :wincmd h<CR>
+noremap <silent> -<up> :wincmd k<CR>
+noremap <silent> -<right> :wincmd l<CR>
 
 " ---------------- "
 "     PLUGINS      "
 " ---------------- "
 
-" pathogen
+" Pathogen
 execute pathogen#infect()
 
-" ctags
-" let g:ctags_path = "~/.vim/plugin/ctags.vim"
-" let g:ctags_statusline=1
 
 " Rainbow parantheses
 au VimEnter * RainbowParenthesesToggle     " Toggle it on/off
@@ -139,20 +155,6 @@ let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
 
 
-" Taglist
-" let Tlist_Ctags_Cmd = "~/.vim/plugin/taglist.vim"
-" noremap <silent><F3> :TlistToggle<CR>
-" let Tlist_Auto_Update = 1
-" let Tlist_Use_Right_Window = 1
-" let Tlist_File_Fold_Auto_Close = 1
-" autocmd VimEnter *.java Tlist
-" autocmd VimEnter *.xml Tlist
-" autocmd VimEnter *.php Tlist
-" autocmd VimEnter *.py Tlist
-" autocmd VimEnter *.c Tlist
-" autocmd VimEnter *.h Tlist
-" autocmd VimEnter *.cpp Tlist
-
 " NERDTree 
 noremap <silent><F2> :NERDTreeToggle<CR>
 let NERDTreeAutoCenter = 1
@@ -169,27 +171,20 @@ let NERDTreeIgnore+=['.*\.pyc$']
 let NERDTreeIgnore+=['.*\.class$']
 autocmd vimenter * if !argc() | NERDTree | endif
 
+
 " NERDTree tabs
-" let g:nerdtree_tabs_open_on_console_startup=1
-" let g:nerdtree_tabs_smart_startup_focus=2
+let g:nerdtree_tabs_open_on_console_startup=1
+let g:nerdtree_tabs_smart_startup_focus=2
+
 
 " buff explorer
 nmap <F4> :BufExplorerHorizontalSplit<CR>
 let g:bufExplorerSplitBelow=1
 
-" GRB: use fancy buffer closing that doesn't close the split
-" cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
-nnoremap <silent> <C-d> :lclose<CR>:bdelete<CR>
-cabbrev <silent> bd lclose\|bdelete
-:nnoremap <silent> <S-Left> :bprevious<CR>
-:nnoremap <silent> <S-Right> :bnext<CR>
-:noremap <silent> <C-Left> b
-:noremap <silent> <C-Right> w
 
 " airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '᎒'
 let g:airline#extensions#tabline#left_alt_sep = 'ꔖ'
 let g:airline_exclude_preview = 1
 let g:airline_left_sep = '▶'
@@ -200,8 +195,10 @@ let g:airline_linecolumn_prefix = '␤ '
 let g:airline_branch_prefix = '⎇ '
 let g:airline_paste_symbol = 'ρ'
 
+
 " majutsushi tagbar
 nmap <F3> :TagbarToggle<CR>
+
 
 " gundo tree
 nnoremap <F6> :GundoToggle<CR>
@@ -218,22 +215,15 @@ autocmd BufWritePost *.py call Flake8()
 " Syntastic use python checker
 let g:syntastic_python_checkers=['flake8']
 
-" ---------------- "
-"     REMAPINGS    "
-" ---------------- "
+" ------------------ "
+"  Tmux INTEGRATION  "
+" ------------------ "
 
-" Move around the windows
-noremap <silent> -<down> :wincmd j<CR>
-noremap <silent> -<left> :wincmd h<CR>
-noremap <silent> -<up> :wincmd k<CR>
-noremap <silent> -<right> :wincmd l<CR>
-
-" tmux
+" Open tmux split
 nmap <silent> <F5> :!tmux splitw -v -l 10<CR><CR>
 
-" Tmux integration
+" tmux will send xterm-style keys when xterm-keys is on
 if &term =~ '^screen'
-    " tmux will send xterm-style keys when xterm-keys is on
     execute "set <xUp>=\e[1;*A"
     execute "set <xDown>=\e[1;*B"
     execute "set <xRight>=\e[1;*C"
