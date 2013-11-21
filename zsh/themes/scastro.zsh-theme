@@ -6,6 +6,8 @@ function my_git_prompt() {
   INDEX=$(git status --porcelain 2> /dev/null)
   STATUS=""
 
+  ZSH_THEME_GIT_DIFF_RESUME="$(git diff --shortstat 2> /dev/null | awk "{if (NF > 0) print(\"[%B\" \$1 \"f\", \"%{$fg[green]%}\" \$4 \"+\", \"%{$fg[red]%}\" \$6 \"-%b] \")}")"
+
   # is branch ahead?
   if $(echo "$(git log origin/$(current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
     STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_AHEAD"
@@ -42,7 +44,7 @@ function my_git_prompt() {
     else ZSH_GIT_CUST_BRANCH="%{$fg_bold[cyan]%}$(my_current_branch) %{$fg_bold[green]%}✔";
   fi
 
-  echo "$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "$ZSH_THEME_GIT_DIFF_RESUME$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
 function my_current_branch() {
