@@ -61,3 +61,18 @@
 [submodule "vim/.vim/bundle/vim-sensible"]
 	path = vim/.vim/bundle/vim-sensible
 	url = git@github.com:tpope/vim-sensible.git
+[submodule "vim/.vim/bundle/unite.vim"]
+	path = vim/.vim/bundle/unite.vim
+	url = git@github.com:Shougo/unite.vim.git
+[submodule "vim/.vim/bundle/vim-commentary"]
+	path = vim/.vim/bundle/vim-commentary
+	url = git@github.com:tpope/vim-commentary.git
+[submodule "vim/.vim/bundle/vim-surround"]
+	path = vim/.vim/bundle/vim-surround
+	url = git@github.com:tpope/vim-surround.git
+[submodule "vim/.vim/bundle/vim-smartinput"]
+	path = vim/.vim/bundle/vim-smartinput
+	url = git@github.com:kana/vim-smartinput.git
+[submodule "vim/.vim/bundle/vim-multiple-cursors"]
+	path = vim/.vim/bundle/vim-multiple-cursors
+	url = git@github.com:terryma/vim-multiple-cursors.git

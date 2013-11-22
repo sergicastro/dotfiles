@@ -131,7 +131,6 @@ au Syntax * RainbowParenthesesLoadRound    " (), the default when toggling
 au Syntax * RainbowParenthesesLoadSquare   " []
 au Syntax * RainbowParenthesesLoadBraces   " {}
 " au Syntax * RainbowParenthesesLoadChevrons " <>
-
 set viminfo+=!
 let g:rbpt_colorpairs = [
             \ ['brown',       'RoyalBlue3'],
@@ -202,6 +201,15 @@ nmap <F3> :TagbarToggle<CR>
 
 " gundo tree
 nnoremap <F6> :GundoToggle<CR>
+
+
+" unite
+" maping for keys <Leader> and <LocalLeader>
+let mapleader=';'
+let maplocalleader= ' '
+
+
+
 
 " ---------------- "
 "      PYTHON      "
