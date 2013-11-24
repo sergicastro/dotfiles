@@ -61,9 +61,6 @@
 [submodule "vim/.vim/bundle/vim-sensible"]
 	path = vim/.vim/bundle/vim-sensible
 	url = git@github.com:tpope/vim-sensible.git
-[submodule "vim/.vim/bundle/unite.vim"]
-	path = vim/.vim/bundle/unite.vim
-	url = git@github.com:Shougo/unite.vim.git
 [submodule "vim/.vim/bundle/vim-commentary"]
 	path = vim/.vim/bundle/vim-commentary
 	url = git@github.com:tpope/vim-commentary.git

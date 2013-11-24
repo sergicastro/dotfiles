@@ -209,8 +209,6 @@ let mapleader=';'
 let maplocalleader= ' '
 
 
-
-
 " ---------------- "
 "      PYTHON      "
 " ---------------- "
