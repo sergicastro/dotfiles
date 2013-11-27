@@ -43,7 +43,7 @@ function my_git_prompt() {
   # choose color dependen on clean branch
   if [[ -n $STATUS ]];
     then ZSH_GIT_CUST_BRANCH="%{$fg_bold[yellow]%}$(my_current_branch) ";
-    else ZSH_GIT_CUST_BRANCH="%{$fg_bold[cyan]%}$(my_current_branch) %{$fg_bold[green]%}✔";
+    else ZSH_GIT_CUST_BRANCH="%{$fg_bold[blue]%}$(my_current_branch) %{$fg_bold[green]%}✔";
   fi
 
   # show diff resume when only staged files exist, too
