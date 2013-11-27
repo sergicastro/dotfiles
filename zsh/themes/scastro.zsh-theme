@@ -5,8 +5,8 @@ function my_git_prompt() {
   
   INDEX=$(git status --porcelain 2> /dev/null)
   STATUS=""
-
-  ZSH_THEME_GIT_DIFF_RESUME="$(git diff --shortstat 2> /dev/null | awk "{if (NF > 0) print(\"[%B\" \$1 \"f\", \"%{$fg[green]%}\" \$4 \"+\", \"%{$fg[red]%}\" \$6 \"-%b] \")}")"
+  HAS_STAGED=false
+  HAS_UNSTAGED=false
 
   # is branch ahead?
   if $(echo "$(git log origin/$(current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
@@ -15,12 +15,14 @@ function my_git_prompt() {
 
   # is anything staged?
   if $(echo "$INDEX" | grep -E -e '^(D[ M]|[MARC][ MD]) ' &> /dev/null); then
-    STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_STAGED"
+    STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_STAGED";
+    HAS_STAGED=true;
   fi
 
   # is anything unstaged?
   if $(echo "$INDEX" | grep -E -e '^[ MARC][MD] ' &> /dev/null); then
-    STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_UNSTAGED"
+    STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_UNSTAGED";
+    HAS_UNSTAGED=true;
   fi
 
   # is anything untracked?
@@ -43,6 +45,14 @@ function my_git_prompt() {
     then ZSH_GIT_CUST_BRANCH="%{$fg_bold[yellow]%}$(my_current_branch) ";
     else ZSH_GIT_CUST_BRANCH="%{$fg_bold[cyan]%}$(my_current_branch) %{$fg_bold[green]%}✔";
   fi
+
+  # show diff resume when only staged files exist, too
+  CACHED_OPTION=""
+  if $HAS_STAGED && ! $HAS_UNSTAGED ;
+    then CACHED_OPTION="--cached";
+  fi
+
+  ZSH_THEME_GIT_DIFF_RESUME="$(git diff --shortstat $CACHED_OPTION 2> /dev/null | awk "{if (NF > 0) print(\"[%B\" \$1 \"f\", \"%{$fg[green]%}\" \$4 \"+\", \"%{$fg[red]%}\" \$6 \"-%b] \")}")"
 
   echo "$ZSH_THEME_GIT_DIFF_RESUME$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
