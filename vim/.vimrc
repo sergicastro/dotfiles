@@ -117,6 +117,10 @@ noremap <silent> -<left> :wincmd h<CR>
 noremap <silent> -<up> :wincmd k<CR>
 noremap <silent> -<right> :wincmd l<CR>
 
+" uppercase <> lowercase
+noremap <silent> gU gUiw<CR>
+noremap <silent> gu guiw<CR>
+
 " ---------------- "
 "     PLUGINS      "
 " ---------------- "
