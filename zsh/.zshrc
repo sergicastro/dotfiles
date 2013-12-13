@@ -59,3 +59,6 @@ export M2_HOME=~/Programs/maven
 export PATH=$PATH:$M2_HOME/bin:/usr/local/mysql/bin
 export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=1024m"
 export TERM=xterm-256color
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"

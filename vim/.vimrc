@@ -173,6 +173,7 @@ let NERDTreeIgnore+=['.*\.so$', '.*\.a$']
 let NERDTreeIgnore+=['.*\.pyc$']
 let NERDTreeIgnore+=['.*\.class$']
 autocmd vimenter * if !argc() | NERDTree | endif
+" autocmd vimenter * if &filetype !=# 'gitcommit' | NERDTree | endif
 
 
 " NERDTree tabs
@@ -211,6 +212,10 @@ nnoremap <F6> :GundoToggle<CR>
 " maping for keys <Leader> and <LocalLeader>
 let mapleader=';'
 let maplocalleader= ' '
+
+" vim-javascript
+:set regexpengine=1
+:syntax enable
 
 
 " ---------------- "
