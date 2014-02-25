@@ -1,19 +1,20 @@
 #!/usr/bin/env ruby
 
-# Read this blog to know more about this script.
-#
-# http://blog.bigbinary.com/2013/09/19/do-not-allow-force-pusht-to-master.html
 
 class PrePushHandler
 
     def handle
-        reject if pushing_to_master? && forced_push?
+        if forced_push_no_branch?
+            reject "ALL BRANCHES"
+        elsif (forced_push? && pushing_to?('master'))
+            reject current_branch.upcase
+        end
     end
 
     private
 
-    def pushing_to_master?
-        current_branch == 'master'
+    def pushing_to? branch
+        current_branch == branch
     end
 
     def current_branch
@@ -25,26 +26,35 @@ class PrePushHandler
         end
     end
 
-    def reject
-        messages = ["Your attempt to FORCE PUSH to MASTER has been rejected."]
+    def reject branch
+        messages = ["Your attempt to FORCE PUSH to #{branch} has been rejected."]
         messages << "If you still want to FORCE PUSH then you need to ignore the pre_push git hook by executing following command."
         messages << "git push master --force --no-verify"
         feedback messages
     end
 
-    def forced_push?
+    def push_command
         ppid = Process.ppid
         cmd = "ps -ocommand= -p #{ppid}"
-        output = `#{cmd}`
+        return `#{cmd}`
+    end
+
+    def forced_push?
+        output = push_command
         output.match(/--force|-f/)
     end
 
+    def forced_push_no_branch?
+        output = push_command
+        output.match(/git push \S*\s*(-f|--force)/)
+    end
+
     def feedback messages
-        puts "*"*40
+        puts "*"*110
         [messages].flatten.each do |message|
             puts message
         end
-        puts "*"*40
+        puts "*"*110
 
         exit 1
     end
