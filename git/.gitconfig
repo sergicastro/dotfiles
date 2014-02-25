@@ -1,5 +1,5 @@
 [init]
-    templatedir= ~/.githooks
+    templatedir = ~/.gittemplate
 
 [user]
     name = Sergi Castro

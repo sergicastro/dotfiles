@@ -28,7 +28,7 @@ alias mvntu='mvn cargo:undeploy'
 alias mvntr='mvn cargo:redeploy'
 alias mvndt='mvn dependency:tree'
 alias mvndci='mvnDebug clean install'
-alias -g mvndbgf=" -Dmaven.failsafe.debug  -Dwink.client.readTimeout=10000000 -Dwink.client.connectTimeout=1000000"
+alias -g winkto=" -Dmaven.failsafe.debug  -Dwink.client.readTimeout=10000000 -Dwink.client.connectTimeout=1000000"
 # alias -g MVNDBGG=" -Dmaven.surefire.debug  -Dwink.client.readTimeout=10000000 -Dwink.client.connectTimeout=1000000"
 
 alias mysqlk='mysql -u root -proot'
