@@ -1,29 +1,66 @@
 #!/usr/bin/env ruby
 
+# Gets all the necessary info of 'git push' command executed
+# Attributes:
+# +branch+:: target remote branch where push
+# +global+:: boolean true if no branch specified in the command (global push)
+# +forced+:: boolean true if forced push (--force or -f argumetns)
+class PushCommand
+    attr_accessor :branch
+    attr_accessor :global
+    attr_accessor :forced
 
+    def initialize
+        output = `#{"ps -ocommand= -p #{Process.ppid}"}`
+        @forced = /.*(--force|-f)/ === output
+        match = output.match(/git push \S*\s*(\S*).*$/)
+        @global = false
+        if match.nil?
+            @global = true
+        else
+            branch = match.captures[0]
+            # means that position of branch name is parameter --force
+            if /--force|-f/ === branch
+                @global = true
+            else
+                @branch = branch
+            end
+        end
+    end
+end
+
+# Handles 'git push' command and checks if is forced and pushed to a list defined branches or globaly
+# Attributes:
+# +prohibited_branches+:: list of branch where stop the flow id the push commnad is forced, configurable
+# +push_command+:: object with all necessary info of 'git push' command
 class PrePushHandler
+    attr_accessor :prohibited_branches
+    attr_accessor :push_command
 
+    def initialize
+        @prohibited_branches = ['master']
+        @push_command = PushCommand.new
+    end
+
+    # runs the checks of the parent 'git push' command
     def handle
-        if forced_push_no_branch?
+        if self.push_command.forced and self.push_command.global
             reject "ALL BRANCHES"
-        elsif (forced_push? && pushing_to?('master'))
-            reject current_branch.upcase
+        elsif (self.push_command.forced and pushing_to_any_prohibited_branch?)
+            reject self.push_command.branch.upcase
         end
     end
 
     private
 
-    def pushing_to? branch
-        current_branch == branch
+    def pushing_to_any_prohibited_branch?
+        @prohibited_branches.each do |branch|
+            true if pushing_to?(branch)
+        end
     end
 
-    def current_branch
-        result = %x{git branch}.split("\n")
-        if result.empty?
-            feedback "It seems your app is not a git repository."
-        else
-            result.select { |b| b =~ /^\*/ }.first.split(" ").last.strip
-        end
+    def pushing_to? branch
+        self.push_command.branch == branch
     end
 
     def reject branch
@@ -31,22 +68,6 @@ class PrePushHandler
         messages << "If you still want to FORCE PUSH then you need to ignore the pre_push git hook by executing following command."
         messages << "git push master --force --no-verify"
         feedback messages
-    end
-
-    def push_command
-        ppid = Process.ppid
-        cmd = "ps -ocommand= -p #{ppid}"
-        return `#{cmd}`
-    end
-
-    def forced_push?
-        output = push_command
-        output.match(/--force|-f/)
-    end
-
-    def forced_push_no_branch?
-        output = push_command
-        output.match(/git push \S*\s*(-f|--force)/)
     end
 
     def feedback messages
