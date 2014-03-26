@@ -62,3 +62,7 @@ export TERM=xterm-256color
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+export DOTFILES_PATH="$HOME/.dotfiles"
+
+### Check for git repos update
+$DOTFILES_PATH/update_gitrepos.rb
