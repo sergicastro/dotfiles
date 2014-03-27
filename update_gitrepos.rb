@@ -1,17 +1,37 @@
 #!/usr/bin/ruby
-
-######################################
-#   UPDATE GIT REPOS AUTOMATICALLY   #
-######################################
-# - Call this script from your shell configuration file, p.ex add the following line:
+#
+# UPDATE GIT REPOS AUTOMATICALLY
+#
+# Usage:
+#   - Call this script from your shell configuration file, p.ex add the following line:
 #       $HOME/.dotfiles/update_gitrepos.rb
-# - Use config file (.gitrepouptade.yml) to enumerate the repos to update
+#   - Use config file (.gitrepouptade.yml) to enumerate the repos to update
+#
+# Configuration properties:
+#   - modules:  default:: empty
+#               The list of git modules to check for updates.
+#               Each module needs properties <path> with the local path of the repo and the <branch>
+#               with the branch name to update.
+#
+#   - log-level:    default:: "info"
+#                   The level of the logger, it corresponds with Logger::Severity ruby class levels.
+#
+#   - last-update-file: default:: "/tmp/gitreposupdated"
+#                       The file where the last time update is stored.
+#
+#   - global-time-update:   default:: true
+#                           Activates a single time stored in file.
+#                           Last time update can be singly stored for each repo, if you have a lot of
+#                           configured repos that could increase the session startup. In this case
+#                           activate this feature to use a global time and increase the efficiency.
+#                           Note: Activating it the new added repos won't be detected since a day will end.
 
 require "yaml"
 require "logger"
 
 @@logger = Logger.new(STDOUT)
 @@last_update_file = nil
+@@global_time_update = true
 
 # Git command helper
 class GitCommands
@@ -58,7 +78,7 @@ class GitRepoManager
         actual_branch = @git_commands.get_actual_branch
         local_branch = branch
         remote_branch = 'origin/' << branch
-    
+
         if @git_commands.is_actual_branch_dirty?
             @@logger.info "There are not stashed changes in branch #{actual_branch}"
             @@logger.info "...Aborting update"
@@ -68,32 +88,32 @@ class GitRepoManager
         # move to branch and fetch remote
         @git_commands.change_to_branch local_branch
         @git_commands.fetch_repo
-    
+
         if not is_up_to_date?(remote_branch, local_branch)
             puts "#{repo_path} needs updates to sync remote:"
             puts "Do you want to update? How: merge [m], rebase [r], reset hard [R], abort [a/A]"
             res = gets.chomp
             if not res.nil?
                 case res
-                    when "m" 
-                        error = `git merge #{remote_branch}`
-                    when "r"
-                        error = `git rebase #{remote_branch}`
-                    when "R"
-                        puts "This will be delete local changes, are you sure to continue? [N,y]"
-                        res = gets.chomp.downcase
-                        if not res.nil? and ["yes","y"].include? res
-                            error = `git reset --hard #{remote_branch}`
-                        end
-                    when /a|A/
-                        @@logger.info "...Aborting update"
+                when "m" 
+                    error = `git merge #{remote_branch}`
+                when "r"
+                    error = `git rebase #{remote_branch}`
+                when "R"
+                    puts "This will be delete local changes, are you sure to continue? [N,y]"
+                    res = gets.chomp.downcase
+                    if not res.nil? and ["yes","y"].include? res
+                        error = `git reset --hard #{remote_branch}`
+                    end
+                when /a|A/
+                    @@logger.info "...Aborting update"
                 end
             end
             @@logger.error ">>> " << error unless error.nil?
         else
             @@logger.debug "...Already up to date"
         end
-    
+
         # return to orginal state
         @git_commands.change_to_branch actual_branch
         Dir.chdir actual_location
@@ -153,7 +173,7 @@ class TimeManager
     # +repo_path+:: the path of the given repo
     def write_time(file, repo_path)
         file = File.new(file,"a")
-        file.puts "#{repo_path}:#{Time.now.to_i}"
+        file.puts(@@global_time_update ? Time.now.to_i : "#{repo_path}:#{Time.now.to_i}")
         file.close
     end
 
@@ -165,10 +185,15 @@ class TimeManager
     def read_time(file, repo_path)
         File.open(file,"r") do |f|
             f.each_line do |line|
-                splitted = line.split ":"
-                if splitted[0].eql? repo_path
+                if @@global_time_update
                     f.close
-                    return splitted[1].to_i
+                    return line.to_i
+                else
+                    splitted = line.split ":"
+                    if splitted[0].eql? repo_path
+                        f.close
+                        return splitted[1].to_i
+                    end
                 end
             end
         end
@@ -185,27 +210,28 @@ class ConfigManager
     def initialize
         conf = YAML.load_file(ENV["HOME"]+"/.gitrepoupdate.yml")
         @modules = conf["modules"]
-        
+
         #last updated file
         @@last_update_file = conf["last-update-file"]
+        @@global_time_update = conf["global-time-update"]
         #logger
         @@logger.formatter = proc do |serverity, time, progname, msg|
             "#{msg}\n"
         end
         @@logger.level = case conf["log-level"]
-                      when "info"
-                          Logger::INFO
-                      when "debug"
-                          Logger::DEBUG
-                      when "warn"
-                          Logger::WARN
-                      when "error"
-                          Logger::ERROR
-                      when "fatal"
-                          Logger::FATAL
-                      else
-                          Logger::INFO
-                      end
+                         when "info"
+                             Logger::INFO
+                         when "debug"
+                             Logger::DEBUG
+                         when "warn"
+                             Logger::WARN
+                         when "error"
+                             Logger::ERROR
+                         when "fatal"
+                             Logger::FATAL
+                         else
+                             Logger::INFO
+                         end
     end
 end
 

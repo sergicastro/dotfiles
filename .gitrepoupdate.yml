@@ -4,5 +4,6 @@ modules:
     - {path: "/absolute/path/to/other/gitrepo", branch: "develop"}
 
 # Optional config
-log-level: info                         # default: info
-last-update-file: /tmp/gitreposupdated  # default: /tmp/gitreposupdated
+log-level: info                             # default: info
+last-update-file: "/tmp/gitreposupdated"    # default: "/tmp/gitreposupdated"
+global-time-update: true                    # default: true
