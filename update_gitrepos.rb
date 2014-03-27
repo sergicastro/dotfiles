@@ -13,9 +13,35 @@ require "logger"
 @@logger = Logger.new(STDOUT)
 @@last_update_file = nil
 
+# Git command helper
+class GitCommands
+
+    # Returns <true> if there are some not stashed changes in the actual branch of the actual repo.
+    def is_actual_branch_dirty?
+        !(`git status --short`.empty?)
+    end
+
+    # Returns the actual branch of the actual repo.
+    def get_actual_branch
+        `git branch | grep \\*`.split(" ")[1]
+    end
+
+    # Changes to the given branch the actual repo.
+    # Params:
+    # +branch+:: the branch where move to.
+    def change_to_branch branch
+        `git checkout #{branch} > /dev/null 2>&1`
+    end
+
+    # Fetches the actual repo with remote called <origin>
+    def fetch_repo
+        `git fetch origin > /dev/null 2>&1`
+    end
+end
 
 # Simple manager to check if the repo is up to date
 class GitRepoManager
+    @git_commands = GitCommands.new
 
     # Checks if a given repo in a given path needs to be updated and ask to user for it.
     # Params:
@@ -26,11 +52,19 @@ class GitRepoManager
         actual_location = Dir.pwd
         Dir.chdir repo_path
 
+        actual_branch = @git_commands.get_actual_branch
         local_branch = branch
         remote_branch = 'origin/' << branch
     
-        # fetch remote
-        `git fetch origin > /dev/null 2>&1`
+        if @git_commands.is_actual_branch_dirty?
+            @@logger.info "There are not stashed changes in branch #{actual_branch}"
+            @@logger.info "...Aborting update"
+            return
+        end
+
+        # move to branch and fetch remote
+        @git_commands.change_to_branch local_branch
+        @git_commands.fetch_repo
     
         if not is_up_to_date?(remote_branch, local_branch)
             puts "#{repo_path} needs updates to sync remote:"
@@ -49,7 +83,7 @@ class GitRepoManager
                             error = `git reset --hard #{remote_branch}`
                         end
                     when /a|A/
-                        @@logger.info "Aborting update..."
+                        @@logger.info "...Aborting update"
                 end
             end
             @@logger.error ">>> " << error unless error.nil?
@@ -57,6 +91,8 @@ class GitRepoManager
             @@logger.debug "...Already up to date"
         end
     
+        # return to orginal state
+        @git_commands.change_to_branch actual_branch
         Dir.chdir actual_location
     end
 
@@ -106,6 +142,15 @@ class TimeManager
 
     private
 
+    # Saves the last time when fir repos were checked for updates
+    # Params:
+    # +file+:: file name where store the time
+    def write_time(file)
+        file = File.new(file,"w")
+        file.puts(Time.now.to_i)
+        file.close
+    end
+
     # Loads the last time when git repos were checked for updates
     # Params:
     # +file+:: file name where load the time
@@ -117,15 +162,6 @@ class TimeManager
             end
         end
         return res
-    end
-
-    # Saves the last time when fir repos were checked for updates
-    # Params:
-    # +file+:: file name where store the time
-    def write_time(file)
-        file = File.new(file,"w")
-        file.puts(Time.now.to_i)
-        file.close
     end
 end
 
