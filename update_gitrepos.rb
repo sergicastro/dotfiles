@@ -41,7 +41,10 @@ end
 
 # Simple manager to check if the repo is up to date
 class GitRepoManager
-    @git_commands = GitCommands.new
+
+    def initialize
+        @git_commands = GitCommands.new
+    end
 
     # Checks if a given repo in a given path needs to be updated and ask to user for it.
     # Params:
@@ -119,22 +122,23 @@ class GitRepoManager
 end
 
 # Simple manager to store the last update check
-# TODO store time by repo (use yaml)
 class TimeManager
 
     # Returns <true> if its time to check for updates again
-    def will_check_for_updates?
+    # Params:
+    # +repo_path+:: the path of the repo that has been checked
+    def will_check_for_updates? repo_path
         if @@last_update_file.nil? or @@last_update_file.empty?
             @@last_update_file = "/tmp/gitreposupdated"
         end
         last_update = nil
 
         if File.exist? @@last_update_file
-            last_update = read_time(@@last_update_file)
+            last_update = read_time(@@last_update_file, repo_path)
         end
 
         if last_update.nil? or Time.now.to_i - last_update > 24 * 60 * 60
-            write_time(@@last_update_file)
+            write_time(@@last_update_file, repo_path)
             return true
         end
         return false
@@ -142,26 +146,33 @@ class TimeManager
 
     private
 
-    # Saves the last time when fir repos were checked for updates
+    # Saves the last time when git repos were checked for updates.
+    # The times are classified by the repo path.
     # Params:
     # +file+:: file name where store the time
-    def write_time(file)
-        file = File.new(file,"w")
-        file.puts(Time.now.to_i)
+    # +repo_path+:: the path of the given repo
+    def write_time(file, repo_path)
+        file = File.new(file,"a")
+        file.puts "#{repo_path}:#{Time.now.to_i}"
         file.close
     end
 
-    # Loads the last time when git repos were checked for updates
+    # Loads the last time when git repos were checked for updates.
+    # Search for the given repo
     # Params:
     # +file+:: file name where load the time
-    def read_time(file)
-        res = nil
+    # +repo_path+:: the path of the given repo to read
+    def read_time(file, repo_path)
         File.open(file,"r") do |f|
             f.each_line do |line|
-                res = line.to_i
+                splitted = line.split ":"
+                if splitted[0].eql? repo_path
+                    f.close
+                    return splitted[1].to_i
+                end
             end
         end
-        return res
+        return nil
     end
 end
 
@@ -200,10 +211,9 @@ end
 
 # Main execution of the script
 def main
-    config = ConfigManager.new
-    if TimeManager.new.will_check_for_updates?
-        gitrepo_manager = GitRepoManager.new
-        config.modules.each do |gitmodule|
+    gitrepo_manager = GitRepoManager.new
+    ConfigManager.new.modules.each do |gitmodule|
+        if TimeManager.new.will_check_for_updates? gitmodule["path"]
             gitrepo_manager.check_for_updates gitmodule["path"], gitmodule["branch"]
         end
     end
