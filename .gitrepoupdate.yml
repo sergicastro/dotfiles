@@ -1,2 +1,8 @@
+# list of modules to check
 modules:
     - {path: "/absolute/path/to/gitrepo", branch: "master"}
+    - {path: "/absolute/path/to/other/gitrepo", branch: "develop"}
+
+# Optional config
+log-level: info                         # default: info
+last-update-file: /tmp/gitreposupdated  # default: /tmp/gitreposupdated

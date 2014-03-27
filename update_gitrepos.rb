@@ -8,16 +8,21 @@
 # - Use config file (.gitrepouptade.yml) to enumerate the repos to update
 
 require "yaml"
+require "logger"
+
+@@logger = Logger.new(STDOUT)
+@@last_update_file = nil
+
 
 # Simple manager to check if the repo is up to date
 class GitRepoManager
 
     # Checks if a given repo in a given path needs to be updated and ask to user for it.
     # Params:
-    # +repo_paht+:: path of the git repository to check
+    # +repo_path+:: path of the git repository to check
     # +branch+:: branch name to check
     def check_for_updates(repo_path, branch)
-        puts "Checking #{repo_path} for updates..."
+        @@logger.debug "Checking #{repo_path} for updates..."
         actual_location = Dir.pwd
         Dir.chdir repo_path
 
@@ -28,6 +33,7 @@ class GitRepoManager
         `git fetch origin > /dev/null 2>&1`
     
         if not is_up_to_date?(remote_branch, local_branch)
+            puts "#{repo_path} needs updates to sync remote:"
             puts "Do you want to update? How: merge [m], rebase [r], reset hard [R], abort [a/A]"
             res = gets.chomp
             if not res.nil?
@@ -43,12 +49,12 @@ class GitRepoManager
                             error = `git reset --hard #{remote_branch}`
                         end
                     when /a|A/
-                        puts "Aborting update..."
+                        @@logger.info "Aborting update..."
                 end
             end
-            puts ">>> " << error unless error.nil?
+            @@logger.error ">>> " << error unless error.nil?
         else
-            puts "...Already up to date"
+            @@logger.debug "...Already up to date"
         end
     
         Dir.chdir actual_location
@@ -71,7 +77,7 @@ class GitRepoManager
     def is_up_to_date?(remote_branch, local_branch)
         remote_commit = get_last_commit_hash(remote_branch) 
         local_commit = get_last_commit_hash(local_branch)
-        puts "\tremote commit: #{remote_commit}\n\tlocal commit: #{local_commit}"
+        @@logger.debug "\tremote commit: #{remote_commit}\n\tlocal commit: #{local_commit}"
         return remote_commit.eql? local_commit
     end
 end
@@ -82,17 +88,17 @@ class TimeManager
 
     # Returns <true> if its time to check for updates again
     def will_check_for_updates?
-        time_file = "/tmp/gitreposupdated"
+        if @@last_update_file.nil? or @@last_update_file.empty?
+            @@last_update_file = "/tmp/gitreposupdated"
+        end
         last_update = nil
 
-        if File.exist? time_file
-            last_update = read_time(time_file)
-        else
-            write_time(time_file)
+        if File.exist? @@last_update_file
+            last_update = read_time(@@last_update_file)
         end
 
         if last_update.nil? or Time.now.to_i - last_update > 24 * 60 * 60
-            write_time(time_file)
+            write_time(@@last_update_file)
             return true
         end
         return false
@@ -100,7 +106,7 @@ class TimeManager
 
     private
 
-    # Load the last time when git repos were checked for updates
+    # Loads the last time when git repos were checked for updates
     # Params:
     # +file+:: file name where load the time
     def read_time(file)
@@ -113,7 +119,7 @@ class TimeManager
         return res
     end
 
-    # Save the last time when fir repos were checked for updates
+    # Saves the last time when fir repos were checked for updates
     # Params:
     # +file+:: file name where store the time
     def write_time(file)
@@ -132,18 +138,40 @@ class ConfigManager
     def initialize
         conf = YAML.load_file(ENV["HOME"]+"/.gitrepoupdate.yml")
         @modules = conf["modules"]
+        
+        #last updated file
+        @@last_update_file = conf["last-update-file"]
+        #logger
+        @@logger.formatter = proc do |serverity, time, progname, msg|
+            "#{msg}\n"
+        end
+        @@logger.level = case conf["log-level"]
+                      when "info"
+                          Logger::INFO
+                      when "debug"
+                          Logger::DEBUG
+                      when "warn"
+                          Logger::WARN
+                      when "error"
+                          Logger::ERROR
+                      when "fatal"
+                          Logger::FATAL
+                      else
+                          Logger::INFO
+                      end
     end
 end
 
 # Main execution of the script
 def main
+    config = ConfigManager.new
     if TimeManager.new.will_check_for_updates?
         gitrepo_manager = GitRepoManager.new
-        ConfigManager.new.modules.each do |gitmodule|
+        config.modules.each do |gitmodule|
             gitrepo_manager.check_for_updates gitmodule["path"], gitmodule["branch"]
         end
     end
 end
 
-# execute
+# execute it
 main
