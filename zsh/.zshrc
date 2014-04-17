@@ -59,10 +59,10 @@ export M2_HOME=~/Programs/maven
 export PATH=$PATH:$M2_HOME/bin:/usr/local/mysql/bin
 export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=1024m"
 export TERM=xterm-256color
+export DOTFILES_PATH="$HOME/.dotfiles"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
-export DOTFILES_PATH="$HOME/.dotfiles"
 
 ### Check for git repos update
 $DOTFILES_PATH/update_gitrepos.rb
