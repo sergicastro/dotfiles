@@ -1,3 +1,4 @@
+#
 # scastro zsh theme
 
 function my_git_prompt() {
@@ -52,9 +53,29 @@ function my_git_prompt() {
     then CACHED_OPTION="--cached";
   fi
 
-  ZSH_THEME_GIT_DIFF_RESUME="$(git diff --shortstat $CACHED_OPTION 2> /dev/null | awk "{if (NF > 0) print(\"[%B\" \$1 \"f\", \"%{$fg[green]%}\" \$4 \"+\", \"%{$fg[red]%}\" \$6 \"-%b] \")}")"
+  ZSH_THEME_GIT_DIFF_RESUME=$(diff_resume)
 
   echo "$ZSH_THEME_GIT_DIFF_RESUME$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
+
+function diff_resume() {
+    stats="$(git diff --shortstat $CACHED_OPTION 2> /dev/null)"
+    if [ -n "$stats" ]; then
+        files=$(echo "$stats" | grep "[[:digit:]]* file" -o | cut -d" " -f1)
+        files=$(echo "$files""f")
+
+        insertions=$(echo "$stats" | grep -e "[[:digit:]]* insertion" -o | cut -d" " -f1)
+        if [ -z "$insertions" ];
+            then insertions="0";
+        fi
+
+        deletions=$(echo "$stats" | grep -e "[[:digit:]]* deletion" -o | cut -d" " -f1)
+        if [ -z "$deletions" ];
+            then deletions="0";
+        fi
+
+        echo "[%B$files %{$fg[green]%}$insertions+ %{$fg[red]%}$deletions-%b] "
+    fi
 }
 
 function my_current_branch() {
