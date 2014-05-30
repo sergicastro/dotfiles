@@ -12,7 +12,7 @@ class PushCommand
 
     def initialize
         output = `#{"ps -ocommand= -p #{Process.ppid}"}`
-        @forced = /.*(--force|-f)/ === output
+        @forced = /.*(--force\s|-f\s)/ === output
         match = output.match(/git push \S*\s*(\S*).*$/)
         @global = false
         if match.nil?
@@ -20,7 +20,7 @@ class PushCommand
         else
             branch = match.captures[0]
             # means that position of branch name is parameter --force
-            if /--force|-f/ === branch
+            if /--force$|-f$/ === branch
                 @global = true
             else
                 @branch = branch
@@ -57,6 +57,7 @@ class PrePushHandler
         @prohibited_branches.each do |branch|
             true if pushing_to?(branch)
         end
+        false
     end
 
     def pushing_to? branch
