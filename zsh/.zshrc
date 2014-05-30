@@ -56,7 +56,7 @@ zstyle ':completion:*' special-dirs true
 # Define the PATH
 export JAVA_HOME=/usr
 export M2_HOME=~/Programs/maven
-export PATH=$PATH:$M2_HOME/bin:/usr/local/mysql/bin
+export PATH=$PATH:$M2_HOME/bin:/usr/local/mysql/bin:$HOME/scripts
 export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=1024m"
 export TERM=xterm-256color
 export DOTFILES_PATH="$HOME/.dotfiles"
