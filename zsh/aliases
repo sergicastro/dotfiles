@@ -38,7 +38,7 @@ alias tomCatalina='sudo /opt/tomcat/bin/catalina.sh'
 alias scpi='scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 alias sshi='ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 
-alias vim='vim_tmux'
+# alias vim='vim_tmux'
 
 # Functions
 function vim_tmux() { tmux new -d "vim $*" \; attach }

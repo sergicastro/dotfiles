@@ -235,15 +235,15 @@ let g:syntastic_python_checkers=['flake8']
 " ------------------ "
 
 " Open tmux split
-nmap <silent> <F5> :!tmux splitw -v -l 10<CR><CR>
+" nmap <silent> <F5> :!tmux splitw -v -l 10<CR><CR>
 
 " tmux will send xterm-style keys when xterm-keys is on
-if &term =~ '^screen'
-    execute "set <xUp>=\e[1;*A"
-    execute "set <xDown>=\e[1;*B"
-    execute "set <xRight>=\e[1;*C"
-    execute "set <xLeft>=\e[1;*D"
-endif"
+" if &term =~ '^screen'
+"     execute "set <xUp>=\e[1;*A"
+"     execute "set <xDown>=\e[1;*B"
+"     execute "set <xRight>=\e[1;*C"
+"     execute "set <xLeft>=\e[1;*D"
+" endif"
 
 " Close tmux when exiting vim
-autocmd VimLeave * silent !tmux killp -a
+" autocmd VimLeave * silent !tmux killp -a
