@@ -136,7 +136,7 @@ class GitRepoManager
     def is_up_to_date?(remote_branch, local_branch)
         remote_commit = get_last_commit_hash(remote_branch) 
         local_commit = get_last_commit_hash(local_branch)
-        @@logger.debug "\tremote commit: #{remote_commit}\n\tlocal commit: #{local_commit}"
+        @@logger.debug "\tremote commit: #{remote_commit} [#{remote_branch}]\n\tlocal commit: #{local_commit} [#{local_branch}]"
         return remote_commit.eql? local_commit
     end
 end
