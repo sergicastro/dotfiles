@@ -172,6 +172,7 @@ class TimeManager
     # +file+:: file name where store the time
     # +repo_path+:: the path of the given repo
     def write_time(file, repo_path)
+        File.delete(file) if File.exist? file
         file = File.new(file,"a")
         file.puts(@@global_time_update ? Time.now.to_i : "#{repo_path}:#{Time.now.to_i}")
         file.close
