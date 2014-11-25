@@ -1,0 +1,4 @@
+#!/bin/bash
+
+undeploy $1
+deploy $1
