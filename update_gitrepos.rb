@@ -29,9 +29,9 @@
 require "yaml"
 require "logger"
 
-@@logger = Logger.new(STDOUT)
-@@last_update_file = nil
-@@global_time_update = true
+$logger = Logger.new(STDOUT)
+$last_update_file = nil
+$global_time_update = true
 
 # Git command helper
 class GitCommands
@@ -71,7 +71,7 @@ class GitRepoManager
     # +repo_path+:: path of the git repository to check
     # +branch+:: branch name to check
     def check_for_updates(repo_path, branch)
-        @@logger.debug "Checking #{repo_path} for updates..."
+        $logger.debug "Checking #{repo_path} for updates..."
         actual_location = Dir.pwd
         Dir.chdir repo_path
 
@@ -80,8 +80,8 @@ class GitRepoManager
         remote_branch = 'origin/' << branch
 
         if @git_commands.is_actual_branch_dirty?
-            @@logger.info "There are not stashed changes in branch #{actual_branch}"
-            @@logger.info "...Aborting update"
+            $logger.info "There are not stashed changes in branch #{actual_branch}"
+            $logger.info "...Aborting update"
             return
         end
 
@@ -106,12 +106,12 @@ class GitRepoManager
                         error = `git reset --hard #{remote_branch}`
                     end
                 when /a|A/
-                    @@logger.info "...Aborting update"
+                    $logger.info "...Aborting update"
                 end
             end
-            @@logger.error ">>> " << error unless error.nil?
+            $logger.error ">>> " << error unless error.nil?
         else
-            @@logger.debug "...Already up to date"
+            $logger.debug "...Already up to date"
         end
 
         # return to orginal state
@@ -136,7 +136,7 @@ class GitRepoManager
     def is_up_to_date?(remote_branch, local_branch)
         remote_commit = get_last_commit_hash(remote_branch) 
         local_commit = get_last_commit_hash(local_branch)
-        @@logger.debug "\tremote commit: #{remote_commit} [#{remote_branch}]\n\tlocal commit: #{local_commit} [#{local_branch}]"
+        $logger.debug "\tremote commit: #{remote_commit} [#{remote_branch}]\n\tlocal commit: #{local_commit} [#{local_branch}]"
         return remote_commit.eql? local_commit
     end
 end
@@ -148,17 +148,17 @@ class TimeManager
     # Params:
     # +repo_path+:: the path of the repo that has been checked
     def will_check_for_updates? repo_path
-        if @@last_update_file.nil? or @@last_update_file.empty?
-            @@last_update_file = "/tmp/gitreposupdated"
+        if $last_update_file.nil? or $last_update_file.empty?
+            $last_update_file = "/tmp/gitreposupdated"
         end
         last_update = nil
 
-        if File.exist? @@last_update_file
-            last_update = read_time(@@last_update_file, repo_path)
+        if File.exist? $last_update_file
+            last_update = read_time($last_update_file, repo_path)
         end
 
         if last_update.nil? or Time.now.to_i - last_update > 24 * 60 * 60
-            write_time(@@last_update_file, repo_path)
+            write_time($last_update_file, repo_path)
             return true
         end
         return false
@@ -174,7 +174,7 @@ class TimeManager
     def write_time(file, repo_path)
         File.delete(file) if File.exist? file
         file = File.new(file,"a")
-        file.puts(@@global_time_update ? Time.now.to_i : "#{repo_path}:#{Time.now.to_i}")
+        file.puts($global_time_update ? Time.now.to_i : "#{repo_path}:#{Time.now.to_i}")
         file.close
     end
 
@@ -186,7 +186,7 @@ class TimeManager
     def read_time(file, repo_path)
         File.open(file,"r") do |f|
             f.each_line do |line|
-                if @@global_time_update
+                if $global_time_update
                     f.close
                     return line.to_i
                 else
@@ -213,13 +213,13 @@ class ConfigManager
         @modules = conf["modules"]
 
         #last updated file
-        @@last_update_file = conf["last-update-file"]
-        @@global_time_update = conf["global-time-update"]
+        $last_update_file = conf["last-update-file"]
+        $global_time_update = conf["global-time-update"]
         #logger
-        @@logger.formatter = proc do |serverity, time, progname, msg|
+        $logger.formatter = proc do |serverity, time, progname, msg|
             "#{msg}\n"
         end
-        @@logger.level = case conf["log-level"]
+        $logger.level = case conf["log-level"]
                          when "info"
                              Logger::INFO
                          when "debug"
