@@ -88,7 +88,8 @@ function ssh_connection() {
   fi
 }
 
-local ret_status="%(?:%{$fg_bold[green]%}:%{$fg_bold[red]%})%?%{$reset_color%}"
+# local ret_status="%(?:%{$fg_bold[cyan]%}:%{$fg_bold[red]%})%?%{$reset_color%}"
+local ret_status="%(?::%{$fg_bold[cyan]%}%? )%{$reset_color%}"
 
 # git theming
 ZSH_THEME_PROMPT_RETURNCODE_PREFIX="%{$fg_bold[red]%}"
@@ -110,7 +111,7 @@ ZSH_THEME_GIT_PROMPT_SUFFIX=" %b%{$fg_bold[gray]%}>%{$reset_color%}"
 if [ $UID -eq 0 ]; then NCOLOR="green"; else NCOLOR="red"; fi
 
 # prompt
-PROMPT='$(ssh_connection)%{$fg[$NCOLOR]%}%n%B@%b%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[white]%}%30<...<%~%<<%{$reset_color%} %B>>%b '
+PROMPT='$(ssh_connection)$ret_status%{$fg[$NCOLOR]%}%n%B@%b%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[white]%}%30<...<%~%<<%{$reset_color%} %B>>%b '
 RPROMPT='$(my_git_prompt)'
 
 # LS colors, made with http://geoff.greer.fm/lscolors/
