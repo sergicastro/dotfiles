@@ -91,6 +91,15 @@ function ssh_connection() {
 # local ret_status="%(?:%{$fg_bold[cyan]%}:%{$fg_bold[red]%})%?%{$reset_color%}"
 local ret_status="%(?::%{$fg_bold[cyan]%}%? )%{$reset_color%}"
 
+# jenv version
+function jenv_version()
+{
+    version=$(jenv local > /dev/null 2>&1)
+    if [[ $? == 0 ]]; then
+        echo "$(jenv version | cut -d" " -f1) "
+    fi
+}
+
 # git theming
 ZSH_THEME_PROMPT_RETURNCODE_PREFIX="%{$fg_bold[red]%}"
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg_bold[magenta]%}↑"
@@ -112,7 +121,7 @@ if [ $UID -eq 0 ]; then NCOLOR="green"; else NCOLOR="red"; fi
 
 # prompt
 PROMPT='$(ssh_connection)$ret_status%{$fg[$NCOLOR]%}%n%B@%b%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[white]%}%30<...<%~%<<%{$reset_color%} %B>>%b '
-RPROMPT='$(my_git_prompt)'
+RPROMPT='$(jenv_version)$(my_git_prompt)'
 
 # LS colors, made with http://geoff.greer.fm/lscolors/
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
