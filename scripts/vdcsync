@@ -4,14 +4,21 @@ require "net/http"
 require "jsonpath"
 require "colorize"
 require "thor"
+require "yaml"
+require "yaml/store"
 
 class VdcSync < Thor
     
+    desc "list_locations", "list the available public locations"
+    def list_locations
+        puts ApiClient.new().list_locations().collect{ |x| x["name"] }.join("\n").colorize(:blue)
+    end
+
     desc "list <location_name>", "list the remote vdcs in the given location"
     def list(location_name)
         client = ApiClient.new()
         link = client.get_location_link(location_name)
-        puts client.get_remotes(link)
+        puts client.list_remotes(link).join("\n").colorize(:blue)
     end
 
     desc "sync <provider_id> <location_name>", "Starts the synchronization of the given vdc in the given location"
@@ -21,7 +28,6 @@ class VdcSync < Thor
         status_link = client.sync_vdc(provider_id, link)
         status = "PENDING"
         until status =~ /FINISHED.*/
-            # puts status
             status = client.get_status(status_link)
         end
     end
@@ -30,25 +36,43 @@ end
 class ApiClient
 
     def initialize
-        @conf = {}
-        @conf["location"] = "http://10.60.1.245/api"
-        @conf["user"] = "admin"
-        @conf["password"] = "xabiquo"
+        conf_filename = "#{ENV["HOME"]}/.vdcsync.yml"
+        begin
+            @conf = YAML.load_file(conf_filename)
+        rescue
+            puts "Set the api location:"
+            location = STDIN.gets.chomp
+            puts "Set the api user:"
+            user = STDIN.gets.chomp
+            puts "Set the api user password:"
+            password = STDIN.gets.chomp
+            @conf = YAML::Store.new(conf_filename)
+            @conf.transaction do
+                @conf["location"] = location
+                @conf["user"] = user
+                @conf["password"] = password
+            end
+            @conf = YAML.load_file(conf_filename)
+        end
     end
 
     def list_locations
         request = Net::HTTP::Get.new("#{@conf["location"]}/cloud/locations")
         request.add_field('accept', 'application/vnd.abiquo.publiccloudregions+json')
         body = send_request(request).body
-        JsonPath.on(body, "$.collection..")
+        JsonPath.on(body, "$.collection..")[0]
     end
 
     def get_location_link(name)
-        list = list_locations.collect{ |x| x[0] }.select{ |x| x["name"] == name }
-        list.collect{ |x| x["links"].select{ |link| link["rel"] == "self" }[0] }[0]
+        list = list_locations.select{ |x| x["name"] == name }
+        link = list.collect{ |x| x["links"].select{ |link| link["rel"] == "self" }[0] }[0]
+        if link.nil?
+            raise Exception.new("No location found with name '#{name}'".colorize(:red))
+        end
+        return link
     end
 
-    def get_remotes(link)
+    def list_remotes(link)
         request = Net::HTTP::Get.new(link["href"] + "/action/remotes")
         request.add_field('accept', 'application/vnd.abiquo.virtualdatacenters+json')
         body = send_request(request).body
