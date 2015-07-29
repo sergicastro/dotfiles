@@ -146,7 +146,7 @@ class TimeManager
 
     # Returns <true> if its time to check for updates again
     # Params:
-    # +repo_path+:: the path of the repo that has been checked
+    # +repo_path+:: the path of the repo that has to check
     def will_check_for_updates? repo_path
         if $last_update_file.nil? or $last_update_file.empty?
             $last_update_file = "/tmp/gitreposupdated"
@@ -220,28 +220,31 @@ class ConfigManager
             "#{msg}\n"
         end
         $logger.level = case conf["log-level"]
-                         when "info"
-                             Logger::INFO
-                         when "debug"
-                             Logger::DEBUG
-                         when "warn"
-                             Logger::WARN
-                         when "error"
-                             Logger::ERROR
-                         when "fatal"
-                             Logger::FATAL
-                         else
-                             Logger::INFO
-                         end
+                        when "info"
+                            Logger::INFO
+                        when "debug"
+                            Logger::DEBUG
+                        when "warn"
+                            Logger::WARN
+                        when "error"
+                            Logger::ERROR
+                        when "fatal"
+                            Logger::FATAL
+                        else
+                            Logger::INFO
+                        end
     end
 end
 
 # Main execution of the script
 def main
     gitrepo_manager = GitRepoManager.new
-    ConfigManager.new.modules.each do |gitmodule|
-        if TimeManager.new.will_check_for_updates? gitmodule["path"]
-            gitrepo_manager.check_for_updates gitmodule["path"], gitmodule["branch"]
+    timeMgr = TimeManager.new
+    if timeMgr.will_check_for_updates? nil
+        ConfigManager.new.modules.each do |gitmodule|
+            if $global_time_update or timeMgr.will_check_for_updates? gitmodule["path"]
+                gitrepo_manager.check_for_updates gitmodule["path"], gitmodule["branch"]
+            end
         end
     end
 end
