@@ -1,5 +1,0 @@
-source 'https://rubygems.org'
-
-# managecredentials dependencies
-gem 'jsonpath'
-gem 'colorize'
