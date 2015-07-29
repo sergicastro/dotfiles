@@ -9,6 +9,7 @@ alias sk='sudo kill -9'
 alias n='LANG=C sudo netstat -putan | grep -i'
 
 alias poff='sudo shutdown 1 "Powering off $HOSTNAME"'
+alias colorlog='ccze -A'
 
 alias cp='cp -i'
 alias mv='mv -i'

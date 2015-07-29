@@ -40,7 +40,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git colored-man colorize heroku mvn pip python redis-cli)
+plugins=(git colored-man colorize heroku mvn pip python redis-cli tmux vagrant)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -62,6 +62,7 @@ export MAVEN_OPTS="-Xms512m -Xmx1024m"
 # "-XX:PermSize=256m -XX:MaxPermSize=1024m"
 export TERM=xterm-256color
 export DOTFILES_PATH="$HOME/.dotfiles"
+export MY_WORKSPACE="$HOME/"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
@@ -72,3 +73,7 @@ $DOTFILES_PATH/update_gitrepos.rb
 ### Jenv
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
+
+### rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
