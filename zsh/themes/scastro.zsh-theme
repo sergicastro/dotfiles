@@ -92,20 +92,12 @@ function ssh_connection() {
 local ret_status="%(?::%{$fg_bold[cyan]%}%? )%{$reset_color%}"
 
 # jenv version
-function jenv_version()
-{
-    version=$(jenv local > /dev/null 2>&1)
-    if [[ $? == 0 ]]; then
-        echo "$(jenv version | cut -d" " -f1) "
-    fi
-}
-
 # rbenv version
-function rbenv_version()
+function env_version()
 {
-    version=$(rbenv local > /dev/null 2>&1)
+    a=$($1 local 2> /dev/null)
     if [[ $? == 0 ]]; then
-        echo "$(rbenv version | cut -d" " -f1) "
+        echo $($1 version-name)
     fi
 }
 
@@ -130,7 +122,7 @@ if [ $UID -eq 0 ]; then NCOLOR="green"; else NCOLOR="red"; fi
 
 # prompt
 PROMPT='$(ssh_connection)$ret_status%{$fg[$NCOLOR]%}%n%B@%b%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[white]%}%30<...<%~%<<%{$reset_color%} %B>>%b '
-RPROMPT='$(rbenv_version)$(jenv_version)$(my_git_prompt)'
+RPROMPT='$(env_version rbenv) $(env_version jenv) $(my_git_prompt)'
 
 # LS colors, made with http://geoff.greer.fm/lscolors/
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
