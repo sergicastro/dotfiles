@@ -95,9 +95,22 @@ local ret_status="%(?::%{$fg_bold[cyan]%}%? )%{$reset_color%}"
 # rbenv version
 function env_version()
 {
-    a=$($1 local 2> /dev/null)
+    tmp=$($1 local 2> /dev/null)
+    # same directory as local defined version
     if [[ $? == 0 ]]; then
         echo $($1 version-name)
+    else
+        # check if decend directory of local defined version
+        origin=$($1 version-origin)
+        if [[ $? == 0 ]]; then
+            origin=${origin%.*-version}
+            actual=$(pwd)
+            postfix=${actual##$origin}
+            actual=${actual%$postfix}
+            if [[ ${#origin} == ${#actual} ]]; then
+                echo $($1 version-name)
+            fi
+        fi
     fi
 }
 
