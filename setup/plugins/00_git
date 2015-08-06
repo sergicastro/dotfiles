@@ -1,0 +1,9 @@
+#!/bin/bash
+
+function 00_git_load()
+{
+    check_install git "git --version"  "sudo apt-get install git -y"
+
+    check_ln $HOME/.dotfiles/git/.gitconfig $HOME/.gitconfig
+    check_ln $HOME/.dotfiles/git/templatedir/ $HOME/.gittemplate
+}

@@ -1,0 +1,7 @@
+#!bin/bash
+
+function 02_vim_load()
+{
+    check_ln $HOME/.dotfiles/vim/.vim $HOME/.vim
+    check_ln $HOME/.dotfiles/vim/.vimrc $HOME/.vimrc
+}
