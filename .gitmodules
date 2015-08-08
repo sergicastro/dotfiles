@@ -76,9 +76,6 @@
 [submodule "vim/.vim/bundle/vim-javascript"]
 	path = vim/.vim/bundle/vim-javascript
 	url = git@github.com:pangloss/vim-javascript.git
-[submodule "scripts/manage-credentials"]
-	path = scripts/manage-credentials
-	url = git@github.com:sergicastro/manage-credentials.git
 [submodule "scripts/.managecredentials"]
 	path = scripts/.managecredentials
 	url = git@github.com:sergicastro/manage-credentials.git

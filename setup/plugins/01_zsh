@@ -2,7 +2,7 @@
 
 function 01_zsh_load()
 {
-    check_git_clone http://github.com/robbyrussell/oh-my-zsh.git  $HOME/.oh-my-zsh
+    check_git_clone http://www.github.com/robbyrussell/oh-my-zsh.git  $HOME/.oh-my-zsh
 
     check_install zsh "zsh --version"  "sudo apt-get install zsh -y"
 

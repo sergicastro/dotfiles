@@ -42,12 +42,18 @@ function spinner()
     local spinstr='|/-\'
     while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
         local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
+        printf " %c  " "$spinstr"
         local spinstr=$temp${spinstr%"$temp"}
         sleep $delay
         printf "\b\b\b\b\b\b"
     done
     printf "    \b\b\b\b"
+}
+
+function run_async()
+{
+    $1 > /dev/null 2>&1 &
+    spinner $!
 }
 
 function check_install()
@@ -61,8 +67,7 @@ function check_install()
         success "$name already installed"
     else
         log "Installing $name via $install"
-        $install > /dev/null 2>&1 &
-        spinner $!
+        run_async "$install"
         if [[ $? == 0 ]]; then
             success "$name successfully installed"
         else
@@ -104,8 +109,10 @@ function check_git_clone()
 
 
 # LOAD PLUGINS
-plugins_path="$HOME/.dotfiles/setup/plugins"
-plugins=$(ls $plugins_path)
+[[ ! -z $DOTFILES_PATH ]] && dotfiles_path=$DOTFILES_PATH || dotfiles_path="$HOME/.dotfiles" 
+plugins_path="$dotfiles_path/setup/plugins"
+execute_only=${*:1}
+[[ ! -z $execute_only ]] && plugins="$execute_only" || plugins=$(ls $plugins_path)
 log "we're gonna install: $plugins"
 for plugin in $plugins
 do

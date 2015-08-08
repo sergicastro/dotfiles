@@ -4,6 +4,12 @@ function 00_git_load()
 {
     check_install git "git --version"  "sudo apt-get install git -y"
 
+    check_git_clone http://www.github.com/sergicastro/dotfiles $HOME/.dotfiles
+    
+    pushd $HOME/.dotfiles > /dev/null 2>&1
+    yes yes | git submodule update --init
+    popd > /dev/null 2>&1
+
     check_ln $HOME/.dotfiles/git/.gitconfig $HOME/.gitconfig
     check_ln $HOME/.dotfiles/git/templatedir/ $HOME/.gittemplate
 }

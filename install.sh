@@ -23,6 +23,7 @@ fi
 
 set -e
 wget https://github.com/sergicastro/dotfiles/archive/master.zip -O /tmp/dotfiles.zip
-unzip /tmp/dotfiles.zip -d /tmp
-mv -v /tmp/dotfiles-master $HOME/.dotfiles
-$HOME/.dotfiles/setup/setup.sh
+unzip /tmp/dotfiles.zip -d /tmp > /dev/null 2>&1
+# mv -v /tmp/dotfiles-master $HOME/.dotfiles
+DOTFILES_PATH=/tmp/dotfiles-master /tmp/dotfiles-master/setup/setup.sh 00_git
+echo "run setup.sh to setup other plugins"
