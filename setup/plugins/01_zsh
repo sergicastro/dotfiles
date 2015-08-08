@@ -10,7 +10,7 @@ function 01_zsh_load()
     check_ln $HOME/.dotfiles/zsh/.zshrc $HOME/.zshrc
     check_ln $HOME/.dotfiles/zsh/themes/scastro.zsh-theme $HOME/.oh-my-zsh/themes/scastro.zsh-theme
     
-    if [[ "$(echo $SHELL)" -ne "/bin/zsh" ]]; then
+    if [[ "$SHELL" != "/bin/zsh" ]]; then
         chsh -s /usr/bin/zsh
     fi
 }
