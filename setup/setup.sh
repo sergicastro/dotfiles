@@ -56,12 +56,12 @@ function check_install()
     name=$1
     check=$2
     install=$3
-    $check 2>&1 > /dev/null
+    $check > /dev/null 2>&1
     if [[ $? == 0 ]]; then
         success "$name already installed"
     else
         log "Installing $name via $install"
-        $install 2>&1 > /dev/null &
+        $install > /dev/null 2>&1 &
         spinner $!
         if [[ $? == 0 ]]; then
             success "$name successfully installed"
@@ -78,7 +78,7 @@ function check_ln()
     set +e
     origin=$1
     destination=$2
-    ls $destination 2>&1 > /dev/null
+    ls $destination > /dev/null 2>&1
     if [[ $? == 0 ]]; then
         success "link $destination already created"
     else
@@ -93,7 +93,7 @@ function check_git_clone()
     set +e
     origin=$1
     destination=$2
-    ls $destination 2>&1 > /dev/null
+    ls $destination > /dev/null 2>&1
     if [[ $? == 0 ]]; then
         success "git repo $origin already created on $destination"
     else
@@ -104,7 +104,7 @@ function check_git_clone()
 
 
 # LOAD PLUGINS
-plugins_path="$HOME/.dotfiles/plugins"
+plugins_path="$HOME/.dotfiles/setup/plugins"
 plugins=$(ls $plugins_path)
 log "we're gonna install: $plugins"
 for plugin in $plugins
