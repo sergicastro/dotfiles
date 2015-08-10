@@ -109,10 +109,13 @@ function check_git_clone()
 
 
 # LOAD PLUGINS
-[[ ! -z $DOTFILES_PATH ]] && dotfiles_path=$DOTFILES_PATH || dotfiles_path="$HOME/.dotfiles" 
+# [[ ! -z $DOTFILES_PATH ]] && dotfiles_path=$DOTFILES_PATH || dotfiles_path="$HOME/.dotfiles" 
+set -x
+dotfiles_path=${DOTFILES_PATH:-$(echo $HOME/.dotfiles)}
 plugins_path="$dotfiles_path/setup/plugins"
 execute_only=${*:1}
-[[ ! -z $execute_only ]] && plugins="$execute_only" || plugins=$(ls $plugins_path)
+# [[ ! -z $execute_only ]] && plugins="$execute_only" || plugins=$(ls $plugins_path)
+plugins=${execute_only:-$(ls $plugins_path)}
 log "we're gonna install: $plugins"
 for plugin in $plugins
 do

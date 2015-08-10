@@ -1,7 +1,87 @@
 #!/bin/bash
+function list_keys(){
+    ($(ls ~/.ssh | grep --color=never .pub))
+}
+
+function generate_key(){
+    echo "No ssh public key found."
+    echo "Do you want to create one? [y/N]"
+    read response
+    
+    if [[ "y" == "$response" ]] || [[ "Y" == "$response" ]]
+    then
+        log "Lets generate the ssh key:"
+        echo "Enter your mail to use it."
+        read your_mail
+
+        ssh-keygen -t rsa -b 4096 -C $your_mail
+
+        pkeys=$(list_keys)
+        use_key $pkeys[0]
+    else
+        exit 13
+    fi
+}
+
+function use_key(){
+    pkey=$1
+    eval "$(ssh-agent -s)" >/dev/null 2>&1
+    
+    if [ $? -eq 0 ]; then
+        ssh-add ~/.ssh/$pkey
+    else
+        error "ssh-agent is not enabled."
+        error "Could not continue."
+        exit 13
+    fi
+    
+    echo "Add the ssh pub key $pkey to yout github account."
+    echo "Then press any key to continue."
+    read any
+    
+    echo "Testing connection..."
+    ssh -T git@github.com
+    
+    if [! $? -eq 0 ]; then
+        error "Solve your connection problem before continue"
+        exit 13
+    else
+        success "Connection succed"
+    fi
+}
+
+function choose_key() {
+    public_keys=$1
+    log "Some ssh public keys are found, choose which one you want to use"
+    cat $public_keys
+    read pkey
+    
+    stat $pkey
+    use_key $pkey
+}
+
+function check_ssh_keys(){
+    public_keys=list_keys
+    len=${#public_keys[@]}
+    
+    if [ $len -eq 0 ]
+    then
+        generate_key
+    elif [ $len -eq 1 ]
+    then
+        pkey=${public_keys[0]}
+        echo "$pkey found."
+        use_key $pkey
+    else
+        choose_key $public_keys
+    fi
+}
 
 function 00_git_load()
 {
+    set -x
+    check_ssh_keys
+
     check_install git "git --version"  "sudo apt-get install git -y"
 
     check_git_clone http://www.github.com/sergicastro/dotfiles $HOME/.dotfiles
