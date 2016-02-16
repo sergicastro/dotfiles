@@ -55,9 +55,9 @@ class PrePushHandler
 
     def pushing_to_any_prohibited_branch?
         @prohibited_branches.each do |branch|
-            true if pushing_to?(branch)
+            return true if pushing_to?(branch)
         end
-        false
+        return false
     end
 
     def pushing_to? branch
