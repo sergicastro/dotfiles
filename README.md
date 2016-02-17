@@ -1,4 +1,4 @@
-dotfiles
+dotfiles ![](https://api.travis-ci.org/sergicastro/dotfiles.svg)
 ========
 my dot files ^^
 

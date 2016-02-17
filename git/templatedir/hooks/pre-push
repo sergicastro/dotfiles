@@ -37,9 +37,9 @@ class PrePushHandler
     attr_accessor :prohibited_branches
     attr_accessor :push_command
 
-    def initialize
-        @prohibited_branches = ['master']
-        @push_command = PushCommand.new
+    def initialize push_command, prohibited_branches
+        @prohibited_branches = prohibited_branches
+        @push_command = push_command
     end
 
     # runs the checks of the parent 'git push' command
@@ -82,4 +82,5 @@ class PrePushHandler
     end
 end
 
-PrePushHandler.new.handle
+handler = PrePushHandler.new(PushCommand.new, ['master'])
+handler.handle

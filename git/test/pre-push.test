@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby
+
+File.delete('pre-push.rb') if File.exists?('pre-push.rb')
+File.symlink('../templatedir/hooks/pre-push', 'pre-push.rb')
+require_relative "./pre-push.rb"
+File.delete('pre-push.rb') if File.exists?('pre-push.rb')
+
+require "stringio"
+require "test/unit"
+
+class PushCommandMock < PushCommand
+    def initialize forced, global, branch
+        @forced = forced
+        @global = global
+        @branch = branch
+    end
+end
+
+def assert_reject pcommand, branches
+    begin
+        foo = StringIO.new
+        $stdout = foo
+        PrePushHandler.new(pcommand, branches).handle
+        assert_equal(true, false)
+    rescue SystemExit => e
+        assert_equal(1.0, e.status)
+        branch_string = "ALL BRANCHES" if pcommand.global else pcommand.branch
+        assert_output_message(branch_string, $stdout.string)
+    end
+end
+
+def assert_ok pcommand, branches
+    begin
+        PrePushHandler.new(pcommand, branches).handle
+    rescue SystemExit => e
+        assert_equal(0.0, e.status)
+    end
+end
+
+def assert_output_message branch, stdout
+    assert_equal(
+        "**************************************************************************************************************\n" \
+        "Your attempt to FORCE PUSH to #{branch} has been rejected.\n" \
+        "If you still want to FORCE PUSH then you need to ignore the pre_push git hook by executing following command.\n" \
+        "git push master --force --no-verify\n" \
+        "**************************************************************************************************************\n",
+        stdout)
+end
+
+class TestPrepush < Test::Unit::TestCase
+
+    def test_push_no_force_master
+        assert_ok(PushCommandMock.new(false, false, "master"), ["master"])
+    end
+
+    def test_push_no_force_other_branch
+        assert_ok(PushCommandMock.new(false, false, "bug-branch"), ["master"])
+    end
+
+    def test_push_no_force_all_branches
+        assert_ok(PushCommandMock.new(false, true, "any"), ["master"])
+    end
+
+    def test_push_force_all_branches
+        assert_reject(PushCommandMock.new(true, true, "any"), ["master"])
+    end
+
+    def test_push_force_master
+        assert_reject(PushCommandMock.new(true, false, "master"), ["master"])
+    end
+
+    def test_push_force_other_branch
+        assert_ok(PushCommandMock.new(true, false, "bug-branch"), ["master", "other"])
+    end
+
+end
