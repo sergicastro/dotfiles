@@ -1,4 +1,4 @@
-dotfiles ![](https://api.travis-ci.org/sergicastro/dotfiles.svg)
+dotfiles [![Build Status](https://travis-ci.org/sergicastro/dotfiles.svg?branch=master)](https://travis-ci.org/sergicastro/dotfiles)
 ========
 my dot files ^^
 
