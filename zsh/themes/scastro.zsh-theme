@@ -53,9 +53,27 @@ function my_git_prompt() {
     then CACHED_OPTION="--cached";
   fi
 
+  # add ahed and behind commits
+  ZSH_THEME_GIT_COMMITS="%{$fg_bold[cyan]%}$(git_commits)%{$fg[white]%} "
+
   ZSH_THEME_GIT_DIFF_RESUME=$(diff_resume)
 
-  echo "$ZSH_THEME_GIT_DIFF_RESUME$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "$ZSH_THEME_GIT_COMMITS$ZSH_THEME_GIT_DIFF_RESUME$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
+
+function git_commits() {
+  if [[ -n $(current_branch) ]]; then
+    branch=$(current_branch)
+    ahead=$(git rev-list origin/$branch..HEAD | wc -l)
+    behind=$(git rev-list HEAD..origin/$branch | wc -l)
+    if [[ ! 0 -eq $ahead ]]; then
+        commits="$ahead↑"
+    fi
+    if [[ ! 0 -eq $behind ]]; then
+        commits="$commits $behind↓"
+    fi
+    echo "$commits"
+  fi
 }
 
 function diff_resume() {
