@@ -54,7 +54,7 @@ function my_git_prompt() {
   fi
 
   # add ahed and behind commits
-  ZSH_THEME_GIT_COMMITS="%{$fg_bold[cyan]%}$(git_commits)%{$fg[white]%} "
+  ZSH_THEME_GIT_COMMITS="$(git_commits)$ZSH_THEME_PROMPT_DEFAULT"
 
   ZSH_THEME_GIT_DIFF_RESUME=$(diff_resume)
 
@@ -62,15 +62,15 @@ function my_git_prompt() {
 }
 
 function git_commits() {
-  if [[ -n $(current_branch) ]]; then
-    branch=$(current_branch)
-    ahead=$(git rev-list origin/$branch..HEAD | wc -l)
-    behind=$(git rev-list HEAD..origin/$branch | wc -l)
+  local branch=$(current_branch)
+  if [[ -n $branch ]]; then
+    ahead=$(git rev-list origin/$branch..HEAD 2>/dev/null | wc -l)
+    behind=$(git rev-list HEAD..origin/$branch 2>/dev/null | wc -l)
     if [[ ! 0 -eq $ahead ]]; then
-        commits="$ahead↑"
+        commits=$(echo "$ZSH_THEME_GIT_PROMPT_AHEAD" | sed -r "s/ahead/$ahead/g" )
     fi
     if [[ ! 0 -eq $behind ]]; then
-        commits="$commits $behind↓"
+        commits=$(echo "$commits$ZSH_THEME_GIT_PROMPT_BEHIND" | sed -r "s/behind/$behind/g" )
     fi
     echo "$commits"
   fi
@@ -133,8 +133,10 @@ function env_version()
 }
 
 # git theming
+ZSH_THEME_PROMPT_DEFAULT="%{$fg[white]%}"
 ZSH_THEME_PROMPT_RETURNCODE_PREFIX="%{$fg_bold[red]%}"
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg_bold[magenta]%}↑"
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg_bold[magenta]%}ahead↑ "
+ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg_bold[cyan]%}behind↓ "
 ZSH_THEME_GIT_PROMPT_STAGED="%{$fg_bold[green]%}⚡"
 ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$fg_bold[red]%}⚡"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg_bold[white]%}⚡"
