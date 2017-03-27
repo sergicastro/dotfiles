@@ -1,81 +1,81 @@
 [submodule "vim/.vim/bundle/jedi-vim"]
 	path = vim/.vim/bundle/jedi-vim
-	url = git@github.com:davidhalter/jedi-vim.git
+	url = https://github.com/davidhalter/jedi-vim.git
 [submodule "vim/.vim/bundle/vim-classpath"]
 	path = vim/.vim/bundle/vim-classpath
-	url = git@github.com:tpope/vim-classpath.git
+	url = https://github.com/tpope/vim-classpath.git
 [submodule "vim/.vim/bundle/vim-clojure-static"]
 	path = vim/.vim/bundle/vim-clojure-static
-	url = git@github.com:guns/vim-clojure-static.git
+	url = https://github.com/guns/vim-clojure-static.git
 [submodule "vim/.vim/bundle/vim-fireplace"]
 	path = vim/.vim/bundle/vim-fireplace
-	url = git@github.com:tpope/vim-fireplace.git
+	url = https://github.com/tpope/vim-fireplace.git
 [submodule "vim/.vim/bundle/vim-nerdtree-tabs"]
 	path = vim/.vim/bundle/vim-nerdtree-tabs
-	url = git@github.com:jistr/vim-nerdtree-tabs.git
+	url = https://github.com/jistr/vim-nerdtree-tabs.git
 [submodule "vim/.vim/bundle/vim-python-pep8-indent"]
 	path = vim/.vim/bundle/vim-python-pep8-indent
-	url = git@github.com:hynek/vim-python-pep8-indent.git
+	url = https://github.com/hynek/vim-python-pep8-indent.git
 [submodule "vim/.vim/bundle/vim-airline"]
 	path = vim/.vim/bundle/vim-airline
-	url = git@github.com:bling/vim-airline.git
+	url = https://github.com/bling/vim-airline.git
 [submodule "vim/.vim/bundle/tagbar"]
 	path = vim/.vim/bundle/tagbar
-	url = git@github.com:majutsushi/tagbar.git
+	url = https://github.com/majutsushi/tagbar.git
 [submodule "vim/.vim/bundle/nerdtree"]
 	path = vim/.vim/bundle/nerdtree
-	url = git@github.com:scrooloose/nerdtree.git
+	url = https://github.com/scrooloose/nerdtree.git
 [submodule "vim/.vim/bundle/vim-autoclose"]
 	path = vim/.vim/bundle/vim-autoclose
-	url = git@github.com:Townk/vim-autoclose.git
+	url = https://github.com/Townk/vim-autoclose.git
 [submodule "vim/.vim/bundle/xmledit"]
 	path = vim/.vim/bundle/xmledit
-	url = git@github.com:sukima/xmledit.git
+	url = https://github.com/sukima/xmledit.git
 [submodule "vim/.vim/bundle/vim-fugitive"]
 	path = vim/.vim/bundle/vim-fugitive
-	url = git@github.com:tpope/vim-fugitive.git
+	url = https://github.com/tpope/vim-fugitive.git
 [submodule "vim/.vim/bundle/vim-signify"]
 	path = vim/.vim/bundle/vim-signify
-	url = git@github.com:mhinz/vim-signify.git
+	url = https://github.com/mhinz/vim-signify.git
 [submodule "vim/.vim/bundle/bufexplorer"]
 	path = vim/.vim/bundle/bufexplorer
-	url = git@github.com:jlanzarotta/bufexplorer.git
+	url = https://github.com/jlanzarotta/bufexplorer.git
 [submodule "vim/.vim/bundle/rainbow_parentheses.vim"]
 	path = vim/.vim/bundle/rainbow_parentheses.vim
-	url = git@github.com:kien/rainbow_parentheses.vim.git
+	url = https://github.com/kien/rainbow_parentheses.vim.git
 [submodule "vim/.vim/bundle/vim-colorschemes"]
 	path = vim/.vim/bundle/vim-colorschemes
-	url = git@github.com:flazz/vim-colorschemes.git
+	url = https://github.com/flazz/vim-colorschemes.git
 [submodule "vim/.vim/bundle/pyflakes-vim"]
 	path = vim/.vim/bundle/pyflakes-vim
-	url = git://github.com/kevinw/pyflakes-vim.git
+	url = https://github.com/kevinw/pyflakes-vim.git
 [submodule "vim/.vim/bundle/vim-flake8"]
 	path = vim/.vim/bundle/vim-flake8
-	url = git@github.com:nvie/vim-flake8.git
+	url = https://github.com/nvie/vim-flake8.git
 [submodule "vim/.vim/bundle/gundo.vim"]
 	path = vim/.vim/bundle/gundo.vim
-	url = git@github.com:sjl/gundo.vim.git
+	url = https://github.com/sjl/gundo.vim.git
 [submodule "vim/.vim/bundle/syntastic"]
 	path = vim/.vim/bundle/syntastic
-	url = git@github.com:scrooloose/syntastic.git
+	url = https://github.com/scrooloose/syntastic.git
 [submodule "vim/.vim/bundle/vim-sensible"]
 	path = vim/.vim/bundle/vim-sensible
-	url = git@github.com:tpope/vim-sensible.git
+	url = https://github.com/tpope/vim-sensible.git
 [submodule "vim/.vim/bundle/vim-commentary"]
 	path = vim/.vim/bundle/vim-commentary
-	url = git@github.com:tpope/vim-commentary.git
+	url = https://github.com/tpope/vim-commentary.git
 [submodule "vim/.vim/bundle/vim-surround"]
 	path = vim/.vim/bundle/vim-surround
-	url = git@github.com:tpope/vim-surround.git
+	url = https://github.com/tpope/vim-surround.git
 [submodule "vim/.vim/bundle/vim-smartinput"]
 	path = vim/.vim/bundle/vim-smartinput
-	url = git@github.com:kana/vim-smartinput.git
+	url = https://github.com/kana/vim-smartinput.git
 [submodule "vim/.vim/bundle/vim-multiple-cursors"]
 	path = vim/.vim/bundle/vim-multiple-cursors
-	url = git@github.com:terryma/vim-multiple-cursors.git
+	url = https://github.com/terryma/vim-multiple-cursors.git
 [submodule "vim/.vim/bundle/vim-javascript"]
 	path = vim/.vim/bundle/vim-javascript
-	url = git@github.com:pangloss/vim-javascript.git
+	url = https://github.com/pangloss/vim-javascript.git
 [submodule "scripts/.managecredentials"]
 	path = scripts/.managecredentials
-	url = git@github.com:sergicastro/manage-credentials.git
+	url = https://github.com/sergicastro/manage-credentials.git
