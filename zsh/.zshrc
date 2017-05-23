@@ -40,7 +40,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git colored-man colorize heroku mvn pip python redis-cli tmux vagrant)
+plugins=(git colored-man colorize heroku mvn pip python redis-cli tmux vagrant knife kitchen)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -77,3 +77,7 @@ eval "$(jenv init -)"
 ### rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
+### gradle
+export GRADLE_HOME=/opt/gradle
+export PATH="$GRADLE_HOME/bin:$PATH"

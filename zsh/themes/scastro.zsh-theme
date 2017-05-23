@@ -64,13 +64,21 @@ function my_git_prompt() {
 function git_commits() {
   local branch=$(current_branch)
   if [[ -n $branch ]]; then
-    ahead=$(git rev-list origin/$branch..HEAD 2>/dev/null | wc -l)
-    behind=$(git rev-list HEAD..origin/$branch 2>/dev/null | wc -l)
-    if [[ ! 0 -eq $ahead ]]; then
-        commits=$(echo "$ZSH_THEME_GIT_PROMPT_AHEAD" | sed -r "s/ahead/$ahead/g" )
-    fi
-    if [[ ! 0 -eq $behind ]]; then
-        commits=$(echo "$commits$ZSH_THEME_GIT_PROMPT_BEHIND" | sed -r "s/behind/$behind/g" )
+    local is_branch=$(git branch | grep $branch | wc -l)
+    if [[ 1 -eq $is_branch  ]]; then
+        local exist_remote=$(git branch --remote | grep $branch | wc -l)
+        if [[ 0 -eq $exist_remote ]]; then
+            commits=$(echo "$ZSH_THEME_GIT_PROMPT_NO_REMOTE")
+        else
+            ahead=$(git rev-list remotes/origin/$branch..HEAD 2>/dev/null | wc -l)
+            behind=$(git rev-list HEAD..remotes/origin/$branch 2>/dev/null | wc -l)
+            if [[ ! 0 -eq $ahead ]]; then
+                commits=$(echo "$ZSH_THEME_GIT_PROMPT_AHEAD" | sed -r "s/ahead/$ahead/g" )
+            fi
+            if [[ ! 0 -eq $behind ]]; then
+                commits=$(echo "$commits$ZSH_THEME_GIT_PROMPT_BEHIND" | sed -r "s/behind/$behind/g" )
+            fi
+        fi
     fi
     echo "$commits"
   fi
@@ -137,13 +145,14 @@ ZSH_THEME_PROMPT_DEFAULT="%{$fg[white]%}"
 ZSH_THEME_PROMPT_RETURNCODE_PREFIX="%{$fg_bold[red]%}"
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg_bold[magenta]%}ahead↑ "
 ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg_bold[cyan]%}behind↓ "
-ZSH_THEME_GIT_PROMPT_STAGED="%{$fg_bold[green]%}⚡"
-ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$fg_bold[red]%}⚡"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg_bold[white]%}⚡"
+ZSH_THEME_GIT_PROMPT_STAGED="%{$fg_bold[green]%}•"
+ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$fg_bold[red]%}•"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg_bold[white]%}•"
 ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[blue]%}➜"
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg_bold[red]%}✕"
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[gray]%}<%{$fg_bold[yellow]%} "
 ZSH_THEME_GIT_PROMPT_SUFFIX=" %b%{$fg_bold[gray]%}>%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_NO_REMOTE="%{$fg[red]%}🡙 "
 
 # features:
 # path is autoshortened to ~30 characters
