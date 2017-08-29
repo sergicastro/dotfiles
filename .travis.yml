@@ -1,7 +1,9 @@
 language: ruby
 rvm: 
     - 1.9.3
-script: cd git/test/ && ruby pre-push.test
+
+before_install: cd git/test/ && bundle install
+script: bundle exec ruby pre-push.test
 
 # Handle git submodules
 git:
