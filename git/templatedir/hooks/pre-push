@@ -20,7 +20,7 @@ class PushCommand
         else
             branch = match.captures[0]
             # means that position of branch name is parameter --force
-            if /--force$|-f$/ === branch
+            if branch.empty? or /--force$|-f$/ === branch
                 @global = true
             else
                 @branch = branch
@@ -44,7 +44,9 @@ class PrePushHandler
 
     # runs the checks of the parent 'git push' command
     def handle
-        if self.push_command.forced and self.push_command.global
+        if self.push_command.global and not self.push_command.forced
+            reject "ALL BRANCHES (no --force)"
+        elsif self.push_command.forced and self.push_command.global
             reject "ALL BRANCHES"
         elsif (self.push_command.forced and pushing_to_any_prohibited_branch?)
             reject self.push_command.branch.upcase
