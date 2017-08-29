@@ -10,9 +10,9 @@ function my_git_prompt() {
   HAS_UNSTAGED=false
 
   # is branch ahead?
-  if $(echo "$(git log origin/$(current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
-    STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_AHEAD"
-  fi
+  # if $(echo "$(git log origin/$(current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
+  #   STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_AHEAD"
+  # fi
 
   # is anything staged?
   if $(echo "$INDEX" | grep -E -e '^(D[ M]|[MARC][ MD]) ' &> /dev/null); then
@@ -64,7 +64,7 @@ function my_git_prompt() {
 function git_commits() {
   local branch=$(current_branch)
   if [[ -n $branch ]]; then
-    local is_branch=$(git branch | grep $branch | wc -l)
+    local is_branch=$(git branch | grep " $branch\$" | wc -l)
     if [[ 1 -eq $is_branch  ]]; then
         local exist_remote=$(git branch --remote | grep $branch | wc -l)
         if [[ 0 -eq $exist_remote ]]; then

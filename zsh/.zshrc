@@ -81,3 +81,6 @@ eval "$(rbenv init -)"
 ### gradle
 export GRADLE_HOME=/opt/gradle
 export PATH="$GRADLE_HOME/bin:$PATH"
+
+### chef
+eval "$(chef shell-init zsh)"
