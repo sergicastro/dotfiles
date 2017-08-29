@@ -2,7 +2,12 @@
 
 File.delete('pre-push.rb') if File.exists?('pre-push.rb')
 File.symlink('../templatedir/hooks/pre-push', 'pre-push.rb')
-require_relative "./pre-push.rb"
+begin
+    foo = StringIO.new
+    $stdout = foo
+    require_relative "./pre-push.rb"
+rescue SystemExit => e
+end
 File.delete('pre-push.rb') if File.exists?('pre-push.rb')
 
 require "stringio"
@@ -24,7 +29,14 @@ def assert_reject pcommand, branches
         assert_equal(true, false)
     rescue SystemExit => e
         assert_equal(1.0, e.status)
-        branch_string = "ALL BRANCHES" if pcommand.global else pcommand.branch
+        if pcommand.global
+            branch_string = "ALL BRANCHES"
+            if not pcommand.forced
+                branch_string << " (no --force)"
+            end
+        else
+            branch_string = pcommand.branch.upcase
+        end
         assert_output_message(branch_string, $stdout.string)
     end
 end
@@ -58,7 +70,7 @@ class TestPrepush < Test::Unit::TestCase
     end
 
     def test_push_no_force_all_branches
-        assert_ok(PushCommandMock.new(false, true, "any"), ["master"])
+        assert_reject(PushCommandMock.new(false, true, "any"), ["master"])
     end
 
     def test_push_force_all_branches
