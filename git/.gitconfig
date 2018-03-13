@@ -4,6 +4,7 @@
 [user]
     name = Sergi Castro
     email = sergikstro@gmail.com
+    signingkey = 5D8F28D9989DBCA8
 
 [core]
     editor = vim
@@ -29,6 +30,13 @@
     br = branch
     lg = log --graph
     ll = log --graph --oneline
+    ; signing
+    cis = commit -S
+    tS = tag -S
+    ms = merge -S
+    rs = rebase -S
+    cps = cherry-pick -S
+    ls = log --graph --show-signature
 
 [apply]
     whitespace = nowarn
