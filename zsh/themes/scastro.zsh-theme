@@ -110,7 +110,7 @@ function my_current_branch() {
 
 function ssh_connection() {
   if [[ -n $SSH_CONNECTION ]]; then
-    echo "%{$fg[red]%}%B(ssh)%b"
+    echo "%{$fg[green]%}%B[SSH $SSH_TTY] %b"
   fi
 }
 
@@ -161,6 +161,8 @@ ZSH_THEME_GIT_PROMPT_NO_REMOTE="%{$fg[red]%}🡙 "
 
 # if superuser make the username green
 if [ $UID -eq 0 ]; then NCOLOR="green"; else NCOLOR="red"; fi
+if [[ -n $SSH_CONNECTION ]]; then NCOLOR="cyan"; fi
+
 
 # prompt
 PROMPT='$(ssh_connection)$ret_status%{$fg[$NCOLOR]%}%n%B@%b%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[white]%}%30<...<%~%<<%{$reset_color%} %B>>%b '

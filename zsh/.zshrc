@@ -40,7 +40,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git colored-man colorize heroku mvn pip python redis-cli tmux vagrant knife kitchen)
+plugins=(git colored-man colorize heroku mvn pip python redis-cli tmux vagrant knife kitchen bundle)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -83,4 +83,16 @@ export GRADLE_HOME=/opt/gradle
 export PATH="$GRADLE_HOME/bin:$PATH"
 
 ### chef
-eval "$(chef shell-init zsh)"
+# eval "$(chef shell-init zsh)"
+
+### the fuck
+eval $(thefuck --alias)
+
+### Go
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+### TILIX VTE (terminal emulator)
+if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+  source /etc/profile.d/vte.sh
+fi
