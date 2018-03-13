@@ -40,7 +40,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git colored-man colorize heroku mvn pip python redis-cli tmux vagrant knife kitchen bundle)
+plugins=(git colored-man colorize heroku mvn pip python redis-cli vagrant knife kitchen bundle)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -67,9 +67,6 @@ export MY_WORKSPACE="$HOME/"
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
-### Check for git repos update
-$DOTFILES_PATH/update_gitrepos.rb
-
 ### Jenv
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
@@ -77,6 +74,9 @@ eval "$(jenv init -)"
 ### rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
+### Check for git repos update (after rbenv)
+$DOTFILES_PATH/update_gitrepos.rb
 
 ### gradle
 export GRADLE_HOME=/opt/gradle
@@ -93,6 +93,6 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
 ### TILIX VTE (terminal emulator)
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+if ([ $TILIX_ID ] || [ $VTE_VERSION ]) && [ -f /etc/profile.d/vte.sh ] ; then
   source /etc/profile.d/vte.sh
 fi
