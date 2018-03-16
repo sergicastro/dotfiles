@@ -1,17 +1,10 @@
 dotfiles [![Build Status](https://travis-ci.org/sergicastro/dotfiles.svg?branch=master)](https://travis-ci.org/sergicastro/dotfiles)
 ========
-my dot files ^^
+Just my essential config
 
 # Installation
 
-clone the repo and run [setup/setup.sh](setup/setup.sh) scritp
-
-or simply donwload and run [install.sh](install.sh) script by:
-```
-wget https://raw.githubusercontent.com/sergicastro/dotfiles/master/install.sh
-chmod +x install.sh
-./install.sh
-```
+TODO check cookbook
 
 ### requirements
 * vim: `> 7.4`

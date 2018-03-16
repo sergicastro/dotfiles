@@ -1,6 +1,6 @@
 language: ruby
 rvm: 
-    - 1.9.3
+    - 2.3.4
 
 before_install: cd git/test/ && bundle install
 script: bundle exec ruby pre-push.test
