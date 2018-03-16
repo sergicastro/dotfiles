@@ -76,7 +76,7 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 ### Check for git repos update (after rbenv)
-$DOTFILES_PATH/update_gitrepos.rb
+update_gitrepos.rb
 
 ### gradle
 export GRADLE_HOME=/opt/gradle
