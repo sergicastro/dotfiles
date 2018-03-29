@@ -54,7 +54,6 @@ source ~/.dotfiles/zsh/aliases
 zstyle ':completion:*' special-dirs true
 
 # Define the PATH
-# export JAVA_HOME=/usr
 export M2_HOME=~/Programs/maven
 export PATH=$PATH:$M2_HOME/bin:/usr/local/mysql/bin:$HOME/scripts
 export MAVEN_OPTS="-Xms512m -Xmx1024m"
@@ -70,6 +69,8 @@ export PATH="/usr/local/heroku/bin:$PATH"
 ### Jenv
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
+
+export JAVA_HOME=/usr
 
 ### rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
