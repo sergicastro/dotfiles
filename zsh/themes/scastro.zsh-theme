@@ -73,15 +73,23 @@ function git_commits() {
             ahead=$(git rev-list remotes/origin/$branch..HEAD 2>/dev/null | wc -l)
             behind=$(git rev-list HEAD..remotes/origin/$branch 2>/dev/null | wc -l)
             if [[ ! 0 -eq $ahead ]]; then
-                commits=$(echo "$ZSH_THEME_GIT_PROMPT_AHEAD" | sed -r "s/ahead/$ahead/g" )
+                commits=$(echo "$ZSH_THEME_GIT_PROMPT_AHEAD" | ssed "s/ahead/$ahead/g" )
             fi
             if [[ ! 0 -eq $behind ]]; then
-                commits=$(echo "$commits$ZSH_THEME_GIT_PROMPT_BEHIND" | sed -r "s/behind/$behind/g" )
+                commits=$(echo "$commits$ZSH_THEME_GIT_PROMPT_BEHIND" | ssed "s/behind/$behind/g" )
             fi
         fi
     fi
     echo "$commits"
   fi
+}
+
+function ssed() {
+    if [[ "linux-gnu" == "$OSTYPE" ]]; then
+        sed -r $1
+    else
+        sed -E $1
+    fi
 }
 
 function diff_resume() {
