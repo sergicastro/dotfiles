@@ -173,7 +173,7 @@ if [[ -n $SSH_CONNECTION ]]; then NCOLOR="cyan"; fi
 
 
 # prompt
-PROMPT='$(ssh_connection)$ret_status%{$fg[$NCOLOR]%}%n%B@%b%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[white]%}%30<...<%~%<<%{$reset_color%} %B>>%b '
+PROMPT='$(ssh_connection)$ret_status%{$fg[green]%}%*%{$bg[black]%}·%{$fg[$NCOLOR]%}%n%B@%b%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[white]%}%30<...<%~%<<%{$reset_color%} %B>>%b '
 RPROMPT='$(env_version rbenv) $(env_version jenv) $(my_git_prompt)'
 
 # LS colors, made with http://geoff.greer.fm/lscolors/
