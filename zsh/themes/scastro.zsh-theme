@@ -61,17 +61,27 @@ function my_git_prompt() {
   echo "$ZSH_THEME_GIT_COMMITS$ZSH_THEME_GIT_DIFF_RESUME$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
+# Shows how many commits differs from origin remote
 function git_commits() {
+  for remote in $(git remote); do
+    commits="$commits $(git_commits_from_remote $remote)"
+  done
+  echo "$commits"
+}
+function git_commits_from_remote() {
+  local remote="$1"
   local branch=$(current_branch)
   if [[ -n $branch ]]; then
-    local is_branch=$(git branch | grep " $branch\$" | wc -l)
-    if [[ 1 -eq $is_branch  ]]; then
-        local exist_remote=$(git branch --remote | grep $branch | wc -l)
-        if [[ 0 -eq $exist_remote ]]; then
+    eval 'git branch | grep " $branch\$" > /dev/null'
+    local is_branch=$?
+    if [[ 0 -eq $is_branch ]]; then
+        eval 'git branch --remote | grep $branch > /dev/null'
+        local exist_remote=$?
+        if [[ ! 0 -eq $exist_remote ]]; then
             commits=$(echo "$ZSH_THEME_GIT_PROMPT_NO_REMOTE")
         else
-            ahead=$(git rev-list remotes/origin/$branch..HEAD 2>/dev/null | wc -l)
-            behind=$(git rev-list HEAD..remotes/origin/$branch 2>/dev/null | wc -l)
+            ahead=$(git rev-list remotes/$remote/$branch..HEAD 2>/dev/null | wc -l | tr -d " ")
+            behind=$(git rev-list HEAD..remotes/$remote/$branch 2>/dev/null | wc -l | tr -d " ")
             if [[ ! 0 -eq $ahead ]]; then
                 commits=$(echo "$ZSH_THEME_GIT_PROMPT_AHEAD" | ssed "s/ahead/$ahead/g" )
             fi
@@ -80,7 +90,9 @@ function git_commits() {
             fi
         fi
     fi
-    echo "$commits"
+    if [ ! -z $commits ]; then
+        echo "$remote: $commits"
+    fi
   fi
 }
 
@@ -129,6 +141,10 @@ local ret_status="%(?::%{$fg_bold[cyan]%}%? )%{$reset_color%}"
 # rbenv version
 function env_version()
 {
+    $(which $1 > /dev/null)
+    if [[ $? != 0 ]]; then
+      return
+    fi
     tmp=$($1 local 2> /dev/null)
     # same directory as local defined version
     if [[ $? == 0 ]]; then
@@ -168,7 +184,7 @@ ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[blue]%}➜"
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg_bold[red]%}✕"
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[gray]%}<%{$fg_bold[yellow]%} "
 ZSH_THEME_GIT_PROMPT_SUFFIX=" %b%{$fg_bold[gray]%}>%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_NO_REMOTE="%{$fg[red]%}🡙 "
+ZSH_THEME_GIT_PROMPT_NO_REMOTE="%{$fg[red]%}⍉ "
 
 # features:
 # path is autoshortened to ~30 characters
@@ -183,7 +199,7 @@ if [[ -n $SSH_CONNECTION ]]; then NCOLOR="cyan"; fi
 KUBE_PS1_CTX_COLOR='yellow'
  
 # prompt
-PROMPT='%B$(my_kube_ps1)%b$(ssh_connection)$ret_status%{$fg[green]%}%*%{$bg[black]%}·%{$fg[$NCOLOR]%}%n%B@%b%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[white]%}%30<...<%~%<<%{$reset_color%} %B>>%b '
+PROMPT='%B$(my_kube_ps1)%b$(ssh_connection)$ret_status%{$fg[green]%}%*%{$reset_color%}·%{$fg[$NCOLOR]%}%n%B@%b%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[white]%}%30<...<%~%<<%{$reset_color%} %B>>%b '
 RPROMPT='$(env_version rbenv) $(env_version jenv) $(my_git_prompt)'
 
 # LS colors, made with http://geoff.greer.fm/lscolors/
