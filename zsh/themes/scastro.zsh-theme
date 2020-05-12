@@ -58,16 +58,17 @@ function my_git_prompt() {
 
   ZSH_THEME_GIT_DIFF_RESUME=$(diff_resume)
 
-  echo "$ZSH_THEME_GIT_COMMITS$ZSH_THEME_GIT_DIFF_RESUME$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_THEME_GIT_COMMITS$ZSH_THEME_GIT_DIFF_RESUME$ZSH_GIT_CUST_BRANCH$STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
 # Shows how many commits differs from origin remote
 function git_commits() {
   for remote in $(git remote); do
-    commits="$commits $(git_commits_from_remote $remote)"
+    cs="$cs$(git_commits_from_remote $remote)"
   done
-  echo "$commits"
+  echo "$cs"
 }
+
 function git_commits_from_remote() {
   local remote="$1"
   local branch=$(current_branch)
@@ -91,7 +92,8 @@ function git_commits_from_remote() {
         fi
     fi
     if [ ! -z $commits ]; then
-        echo "$remote: $commits"
+        remote=$(echo "$ZSH_THEME_GIT_PROMPT_REMOTE" | ssed "s/remote/$remote/g")
+        echo "$remote$commits"
     fi
   fi
 }
@@ -125,7 +127,13 @@ function diff_resume() {
 }
 
 function my_current_branch() {
-  echo $(current_branch || echo "(no branch)")
+  # check first for tag names
+  # local tag=$(git describe --tags 2> /dev/null)
+  # if [[ ! -z $tag ]]; then
+  #   echo "($tag)"
+  # else
+    echo $(current_branch || echo "(no branch)")
+  # fi
 }
 
 function ssh_connection() {
@@ -168,7 +176,7 @@ function env_version()
 function my_kube_ps1(){
     if [[ "on" == "$KUBE_PS1_ENABLED" ]]; then
         echo "$(kube_ps1)"
-        echo '>'
+        echo '└'
     fi
 }
 
@@ -178,11 +186,12 @@ ZSH_THEME_PROMPT_RETURNCODE_PREFIX="%{$fg_bold[red]%}"
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg_bold[magenta]%}ahead↑ "
 ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg_bold[cyan]%}behind↓ "
 ZSH_THEME_GIT_PROMPT_STAGED="%{$fg_bold[green]%}•"
+ZSH_THEME_GIT_PROMPT_REMOTE="%{$fg_bold[white]%}remote: "
 ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$fg_bold[red]%}•"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg_bold[white]%}•"
 ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[blue]%}➜"
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg_bold[red]%}✕"
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[gray]%}<%{$fg_bold[yellow]%} "
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[gray]%}< "
 ZSH_THEME_GIT_PROMPT_SUFFIX=" %b%{$fg_bold[gray]%}>%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_NO_REMOTE="%{$fg[red]%}⍉ "
 
