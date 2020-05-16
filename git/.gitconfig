@@ -22,7 +22,7 @@
 [alias]
     st = status
     ss = status --short
-    ci = commit
+    ci = commit -S
     co = checkout
     pl = pull
     ps = push
@@ -31,7 +31,7 @@
     lg = log --graph
     ll = log --graph --oneline
     ; signing
-    cis = commit -S
+    ; cis = commit -S
     tS = tag -S
     ms = merge -S
     rs = rebase -S
@@ -49,4 +49,10 @@
 
 [diff]
     renames = true
-    renameLimit = 200
+  renameLimit = 200
+
+[url "git@github.com:"]
+    insteadOf = https://github.com/
+
+[commit]
+	gpgsign = true
