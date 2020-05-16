@@ -30,7 +30,7 @@ ZSH_THEME="scastro"
 # DISABLE_CORRECTION="true"
 
 # Uncomment following line if you want red dots to be displayed while waiting for completion
-COMPLETION_WAITING_DOTS="true"
+# COMPLETION_WAITING_DOTS="true"
 
 # Uncomment following line if you want to disable marking untracked files under
 # VCS as dirty. This makes repository status check for large repositories much,
@@ -40,7 +40,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git colored-man colorize heroku mvn pip python redis-cli vagrant knife kitchen bundle)
+plugins=(git colored-man-pages colorize heroku mvn pip python redis-cli vagrant knife kitchen bundle go docker)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -49,51 +49,68 @@ setopt no_share_history
 
 # source ~/.zsh/aliases
 source ~/.dotfiles/zsh/aliases
+local custom_aliases="$HOME/.custom-aliases"
+if [[ -f "$custom_aliases" ]]; then
+  source $custom_aliases
+elif [[ -d "$custom_aliases" ]]; then
+  source $custom_aliases/*
+fi
 
 # autocomplete ..
 zstyle ':completion:*' special-dirs true
 
 # Define the PATH
-export M2_HOME=~/Programs/maven
+#export M2_HOME=~/Programs/maven
 export PATH=$PATH:$M2_HOME/bin:/usr/local/mysql/bin:$HOME/scripts
-export MAVEN_OPTS="-Xms512m -Xmx1024m"
+#export MAVEN_OPTS="-Xms512m -Xmx1024m"
 # java 8 deprecated
 # "-XX:PermSize=256m -XX:MaxPermSize=1024m"
 export TERM=xterm-256color
 export DOTFILES_PATH="$HOME/.dotfiles"
-export MY_WORKSPACE="$HOME/"
+#export MY_WORKSPACE="$HOME/"
+export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
 ### Jenv
 export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
-
-export JAVA_HOME=/usr
+#eval "$(jenv init -)"
 
 ### rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-
-### Check for git repos update (after rbenv)
-update_gitrepos.rb
-
-### gradle
-export GRADLE_HOME=/opt/gradle
-export PATH="$GRADLE_HOME/bin:$PATH"
-
-### chef
-# eval "$(chef shell-init zsh)"
-
-### the fuck
-eval $(thefuck --alias)
+#eval "$(rbenv init -)"
 
 ### Go
 export GOPATH=$HOME/go
+export GOPRIVATE=github.com/tetrateio/*
+export GOPROXY=https://proxy.golang.org,direct
 export PATH=$PATH:$GOPATH/bin
 
 ### TILIX VTE (terminal emulator)
 if ([ $TILIX_ID ] || [ $VTE_VERSION ]) && [ -f /etc/profile.d/vte.sh ] ; then
   source /etc/profile.d/vte.sh
 fi
+
+export EDITOR=vim
+export GPG_TTY=`tty`
+
+## k8s
+source <(kubectl completion zsh)
+alias k=kubectl
+complete -o default -F __start_kubectl k
+source <(helm completion zsh)
+source $HOME/kube-ps1/kube-ps1.sh
+
+# istio
+export PATH=~/istio/bin:$PATH
+source $HOME/istio/tools/_istioctl
+
+export PATH=$PATH:/opt/protoc/bin
+export PATH="$PATH:/usr/local/opt/node@10/bin"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/sergicastro/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/sergicastro/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/sergicastro/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/sergicastro/google-cloud-sdk/completion.zsh.inc'; fi

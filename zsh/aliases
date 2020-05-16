@@ -72,5 +72,3 @@ function git-withbr() {
 function remove_definer(){
     sed 's/DEFINER=[^*]*\*/\*/' ${1}
 }
-
-alias avamarclient='javaws ~/Downloads/administrator.jnlp'

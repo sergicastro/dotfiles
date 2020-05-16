@@ -54,7 +54,7 @@ set showmode
 set cursorline
 
 " Set tab/spaces config
-set expandtab shiftwidth=4 softtabstop=4 smarttab smartindent
+set expandtab shiftwidth=2 softtabstop=2 smarttab smartindent
 
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
