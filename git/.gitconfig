@@ -6,6 +6,12 @@
     email = sergikstro@gmail.com
     signingkey = 5D8F28D9989DBCA8
 
+[includeIf "hasconfig:remote.*.url:*tetrate*/**"]
+    path = .gitconfig-tetrate
+
+[includeIf "hasconfig:remote.*.url:*istio*/**"]
+    path = .gitconfig-tetrate
+
 [core]
     editor = vim
     ; pager = more
@@ -49,10 +55,11 @@
 
 [diff]
     renames = true
-  renameLimit = 200
+    renameLimit = 200
 
 [url "git@github.com:"]
     insteadOf = https://github.com/
 
+
 [commit]
-	gpgsign = true
+    gpgsign = true

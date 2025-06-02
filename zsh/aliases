@@ -46,13 +46,9 @@ alias sshi='ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 # Functions
 function vim_tmux() { tmux new -d "vim $*" \; attach }
 
-function tolatestreset() { git fetch origin; git co $1; git reset --hard origin/$1; git submodule foreach "git co $1 && git fetch origin && git reset --hard origin/$1" }
-function tolatestrebase() { git fetch origin; git co $1; git pull --rebase origin $1; git submodule foreach "git co $1 && git pull --rebase origin $1" }
 function gitdelete() { for g in `git ss | grep D | cut -d" " -f3` ; git rm -f $g; }
-function gitdeletenew() { for g in `git ss | grep '??' | cut -d" " -f2` ; rm $g; }
+function gitdeletenew() { for g in `git ss | grep '??' | cut -d" " -f2` ; rm -r $g; }
 function gitdeletelocalbranches() { git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D }
-
-function listapi() { curl -L -k -u ${2-admin:xabiquo} -v "http://${1}/api/console?doc=resources" | grep uri | sed 's/\s*<uri>//' | sed 's/<\/uri>\s*//' | sed 's/\/\//\//' | sort}
 
 # while java 7 keep existing in some projects
 alias mvn7='JAVA_HOME=/usr/lib/jvm/java-7-oracle/jre mvn'

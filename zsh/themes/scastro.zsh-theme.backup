@@ -1,15 +1,5 @@
 #
 # scastro zsh theme
-#
-# Enable or disable plugins by setting the following variables to "on" or "off":
-# - OHMYZSH_GIT
-# - KUBE_PS1_ENABLED
-# - TCTL_PS1_ENABLED
-# - ASDF_GOLANG
-
-# Defaul pluings enabled
-export OHMYZSH_GIT="on"
-export ASDF_GOLANG="on"
 
 LOG_FILE=/tmp/ohmyzsh-debug.log
 
@@ -24,10 +14,6 @@ function log(){
 log "START"
 
 function my_git_prompt() {
-  if [[ "on" != "${OHMYZSH_GIT}" ]]; then
-    return
-  fi
-
   start_time=$(date +%s%N)
 
   tester=$(git rev-parse --git-dir 2> /dev/null) || return
@@ -253,10 +239,6 @@ function asdf_current(){
 }
 
 function asdf_golang(){
-  if [[ "on" != "$ASDF_GOLANG" ]]; then
-    return
-  fi
-
   start_time=$(date +%s%N)
   root=$(git rev-parse --show-toplevel 2>/dev/null)
   if [[ $? != 0 ]]; then

@@ -40,7 +40,8 @@ ZSH_THEME="scastro"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git colored-man-pages colorize heroku mvn pip python redis-cli vagrant knife kitchen bundle go docker)
+plugins=(git colored-man-pages colorize golang docker asdf)
+autoload -U compinit && compinit
 
 source $ZSH/oh-my-zsh.sh
 
@@ -53,7 +54,9 @@ local custom_aliases="$HOME/.custom-aliases"
 if [[ -f "$custom_aliases" ]]; then
   source $custom_aliases
 elif [[ -d "$custom_aliases" ]]; then
-  source $custom_aliases/*
+  for f in $(ls $custom_aliases/*); do
+    source $f
+  done
 fi
 
 # autocomplete ..
@@ -68,7 +71,7 @@ export PATH=$PATH:$M2_HOME/bin:/usr/local/mysql/bin:$HOME/scripts
 export TERM=xterm-256color
 export DOTFILES_PATH="$HOME/.dotfiles"
 #export MY_WORKSPACE="$HOME/"
-export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
@@ -83,7 +86,7 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 
 ### Go
 export GOPATH=$HOME/go
-export GOPRIVATE=github.com/tetrateio/*
+export GOPRIVATE=github.com/tetrateio/*,github.com/sergicastro/*
 export GOPROXY=https://proxy.golang.org,direct
 export PATH=$PATH:$GOPATH/bin
 
@@ -96,21 +99,40 @@ export EDITOR=vim
 export GPG_TTY=`tty`
 
 ## k8s
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 source <(kubectl completion zsh)
 alias k=kubectl
 complete -o default -F __start_kubectl k
 source <(helm completion zsh)
-source $HOME/kube-ps1/kube-ps1.sh
+#source $HOME/kube-ps1/kube-ps1.sh
 
-# istio
-export PATH=~/istio/bin:$PATH
-source $HOME/istio/tools/_istioctl
+source "/opt/homebrew/opt/kube-ps1/share/kube-ps1.sh"
 
 export PATH=$PATH:/opt/protoc/bin
 export PATH="$PATH:/usr/local/opt/node@10/bin"
+
+# asdf
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/sergicastro/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/sergicastro/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/sergicastro/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/sergicastro/google-cloud-sdk/completion.zsh.inc'; fi
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+# export PATH="/opt/homebrew/opt/go@1.17/bin:$PATH"
+# export PATH="/opt/homebrew/opt/go@1.18/bin:$PATH"
+# export PATH="/opt/homebrew/opt/go@1.19/bin:$PATH"
+export PATH="$PATH:/Users/sergicastro/Library/Python/3.8/bin"
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+eval "$( command rapture shell-init )"
+
+alias kshell='kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash'
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# add Pulumi ESC to the PATH
+export PATH=$PATH:$HOME/.pulumi/bin
