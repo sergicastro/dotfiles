@@ -1,5 +1,6 @@
 [init]
-    templatedir = ~/.gittemplate
+  templatedir = ~/.gittemplate
+	defaultBranch = main
 
 [user]
     name = Sergi Castro
@@ -28,7 +29,7 @@
 [alias]
     st = status
     ss = status --short
-    ci = commit -S
+    ci = commit -s
     co = checkout
     pl = pull
     ps = push
@@ -38,11 +39,16 @@
     ll = log --graph --oneline
     ; signing
     ; cis = commit -S
-    tS = tag -S
-    ms = merge -S
-    rs = rebase -S
-    cps = cherry-pick -S
+    tS = tag -s
+    ms = merge -s
+    rs = rebase -s
+    cps = cherry-pick -s
     ls = log --graph --show-signature
+    lsfull = log --pretty=full --show-signature
+    ; git-worktrees
+    wta = "!f() { git worktree add -b \"$1\" \"$HOME/workspace/git-worktrees/$1\"; }; f"
+    wtr = "!f() { git worktree remove \"$HOME/workspace/git-worktrees/$1\"; }; f"
+    wtl = "!f() { git worktree list; }; f"
 
 [apply]
     whitespace = nowarn
@@ -60,6 +66,8 @@
 [url "git@github.com:"]
     insteadOf = https://github.com/
 
-
 [commit]
+    gpgsign = true
+
+[tag]
     gpgsign = true
