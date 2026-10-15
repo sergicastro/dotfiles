@@ -1,88 +1,58 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
+#
+# Blocks forced pushes (non fast-forward updates) and deletions of protected
+# branches. Git feeds the refs being pushed on stdin, one per line:
+#   <local ref> <local sha> <remote ref> <remote sha>
+# so there is no need to parse the push command line.
+# Known limitation: git does not send deletions made by `git push --mirror`
+# to this hook, so those cannot be blocked here.
 
-# Gets all the necessary info of 'git push' command executed
-# Attributes:
-# +branch+:: target remote branch where push
-# +global+:: boolean true if no branch specified in the command (global push)
-# +forced+:: boolean true if forced push (--force or -f argumetns)
-class PushCommand
-    attr_accessor :branch
-    attr_accessor :global
-    attr_accessor :forced
+REMOTE=${1:-origin}
+PROTECTED_BRANCHES=(master main)
+ZERO=0000000000000000000000000000000000000000
 
-    def initialize
-        output = `#{"ps -ocommand= -p #{Process.ppid}"}`
-        @forced = /.*(--force\s|-f\s)/ === output
-        match = output.match(/git push \S*\s*(\S*).*$/)
-        @global = false
-        if match.nil?
-            @global = true
-        else
-            branch = match.captures[0]
-            # means that position of branch name is parameter --force
-            if branch.empty? or /--force$|-f$/ === branch
-                @global = true
-            else
-                @branch = branch
-            end
-        end
-    end
-end
+reject() {
+    local stars
+    stars=$(printf '%110s' '' | tr ' ' '*')
+    echo "$stars"
+    echo "Your attempt to $1 has been rejected."
+    echo "$2"
+    echo "$stars"
+    exit 1
+}
 
-# Handles 'git push' command and checks if is forced and pushed to a list defined branches or globaly
-# Attributes:
-# +prohibited_branches+:: list of branch where stop the flow id the push commnad is forced, configurable
-# +push_command+:: object with all necessary info of 'git push' command
-class PrePushHandler
-    attr_accessor :prohibited_branches
-    attr_accessor :push_command
+is_protected() {
+    local b
+    for b in "${PROTECTED_BRANCHES[@]}"; do
+        [[ "$1" == "refs/heads/$b" ]] && return 0
+    done
+    return 1
+}
 
-    def initialize push_command, prohibited_branches
-        @prohibited_branches = prohibited_branches
-        @push_command = push_command
-    end
+while read -r local_ref local_sha remote_ref remote_sha || [[ -n $local_ref ]]; do
+    is_protected "$remote_ref" || continue
+    branch=$(echo "${remote_ref#refs/heads/}" | tr '[:lower:]' '[:upper:]')
 
-    # runs the checks of the parent 'git push' command
-    def handle
-        if self.push_command.global and not self.push_command.forced
-            reject "ALL BRANCHES (no --force)"
-        elsif self.push_command.forced and self.push_command.global
-            reject "ALL BRANCHES"
-        elsif (self.push_command.forced and pushing_to_any_prohibited_branch?)
-            reject self.push_command.branch.upcase
-        end
-    end
+    # deleting the remote branch
+    if [[ "$local_sha" == "$ZERO" ]]; then
+        reject "DELETE $branch" \
+            "If you really want to, skip this hook: git push --no-verify $REMOTE :${remote_ref#refs/heads/}"
+    fi
 
-    private
+    # new remote branch: nothing to overwrite
+    [[ "$remote_sha" == "$ZERO" ]] && continue
 
-    def pushing_to_any_prohibited_branch?
-        @prohibited_branches.each do |branch|
-            return true if pushing_to?(branch)
-        end
-        return false
-    end
+    # remote commit is not an ancestor of the pushed one => history rewrite.
+    # remote commit unknown locally: not a force, the remote just has newer work
+    if ! git cat-file -e "$remote_sha^{commit}" 2>/dev/null; then
+        reject "PUSH to $branch without the remote commits" \
+            "The remote has commits you don't have. Fetch and integrate them first."
+    fi
 
-    def pushing_to? branch
-        self.push_command.branch == branch
-    end
+    if ! git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null; then
+        reject "FORCE PUSH to $branch" \
+            "If you really want to, skip this hook: git push --no-verify $REMOTE <branch> --force"
+    fi
+done
 
-    def reject branch
-        messages = ["Your attempt to FORCE PUSH to #{branch} has been rejected."]
-        messages << "If you still want to FORCE PUSH then you need to ignore the pre_push git hook by executing following command."
-        messages << "git push master --force --no-verify"
-        feedback messages
-    end
-
-    def feedback messages
-        puts "*"*110
-        [messages].flatten.each do |message|
-            puts message
-        end
-        puts "*"*110
-
-        exit 1
-    end
-end
-
-handler = PrePushHandler.new(PushCommand.new, ['master'])
-handler.handle
+exit 0
